@@ -12,8 +12,7 @@ namespace DataAccess.Concrete
     public class InvoiceRep : IInvoiceDal
     {
 
-        // AUTHENTICATION
-
+        #region AUTHENTICATION
         public IDataResult<RLoginRequest> GetLogin(string userName, string password)
         {
             RLoginRequest authenticationRequest = null;
@@ -63,7 +62,9 @@ namespace DataAccess.Concrete
 
             return new SuccessDataResult<RLogOutRequest>(logOutRequest);
         }
-        // AUTHENTICATION
+        #endregion
+
+        #region E-INVOICE
         public IDataResult<RSendInvoiceRequest> SendInvoice(string sessionId)
         {
             RSendInvoiceRequest sendInvoiceRequest = null;
@@ -454,11 +455,9 @@ namespace DataAccess.Concrete
             };
             return new SuccessDataResult<RGetGibUserListRequest>(getGibUserListRequest);
         }
+        #endregion
 
-
-
-        // ARCHIVE
-
+        #region ARCHIVE
         public IDataResult<RWriteToArchieveExtendedRequest> GetWriteToArchieveExtendedRequest(string sessionId)
         {
             string guid = Guid.NewGuid().ToString();
@@ -796,7 +795,6 @@ namespace DataAccess.Concrete
 
             return new SuccessDataResult<RReadEArchiveReportRequest>(rReadEArchiveReportRequest);
         }
-
         public IDataResult<RGetEmailEarchiveInvoiceRequest> GetEmailEarchiveInvoiceRequest(string sessionId, string uuId, string eMail)
         {
             RGetEmailEarchiveInvoiceRequest rGetEmailEarchiveInvoiceRequest = new RGetEmailEarchiveInvoiceRequest
@@ -811,7 +809,7 @@ namespace DataAccess.Concrete
 
             return new SuccessDataResult<RGetEmailEarchiveInvoiceRequest>(rGetEmailEarchiveInvoiceRequest);
         }
-        // ARCHIVE
+        #endregion
 
     }
 }
