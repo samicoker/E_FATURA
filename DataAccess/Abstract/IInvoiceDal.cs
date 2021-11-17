@@ -32,6 +32,8 @@ namespace DataAccess.Abstract
         IDataResult<RCancelEArchiveInvoiceRequest> GetCancelEArchiveInvoice(string sessionId, string uuid);
         IDataResult<RGetEArchiveInvoiceStatusRequest> GetEArchiveInvoiceStatus(string sessionId, string uuid);
         IDataResult<RGetEArchiveReportRequest> GetEArchiveReportRequest(string sessionId, string reportPeriod, string ReportStatus= "Y");
+        IDataResult<RReadEArchiveReportRequest> GetReadEArchiveReportRequest(string sessionId, string raporNo);
+        IDataResult<RGetEmailEarchiveInvoiceRequest> GetEmailEarchiveInvoiceRequest(string sessionId, string uuId, string eMail);
 
         // ARCHIVE
     }

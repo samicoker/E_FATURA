@@ -10,6 +10,7 @@ using Entities.Dtos.Response;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -1872,44 +1873,195 @@ namespace Business.Concrete
                 return new ErrorDataResult<GetEArchiveReportResponse>(null, ex.Message);
             }
         }
+        public IDataResult<ReadEArchiveReportResponse> ReadEArchiveReport(string sessionId, string raporNo)
+        {
+            try
+            {
+                var res = _iInvoiceDal.GetReadEArchiveReportRequest(sessionId, raporNo);
+
+                if (res == null)
+                {
+                    throw new Exception(Messages.NotFoundDataByTableRowID());
+                }
+                if (!res.Success)
+                {
+                    throw new Exception(res.Message);
+                }
+
+                ITemplate<RReadEArchiveReportRequest> template = new ReadEArchiveReportXML();
+                var xmlElement = template.Run(res.Data);
+                var xml = xmlElement.ObjectToSoapXml();
+
+                ReadEArchiveReportResponse readEArchiveReportResponse;
+                IDataResult<XmlDocument> res_ = null;
+
+                try
+                {
+                    Dictionary<string, string> header = new Dictionary<string, string>();
+                    header.Add("Content-Type", "text/xml; charset='UTF - 8'");
+
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EIArchiveWS/EFaturaArchive", xml, "POST", header);
+
+                    if (res_ == null)
+                    {
+                        throw new Exception(Messages.NotNull("Response"));
+                    }
+                    if (!res_.Success)
+                    {
+                        throw new Exception(res_.Message);
+                    }
+
+                    var node = res_.Data.ChildNodes[1].ChildNodes[0].ChildNodes[0];
+
+                    var RequestReturnStr = node.GetClass("REQUEST_RETURN");
+                    var RequestReturn = XmlStringToXmlNode2(RequestReturnStr);
+
+                    //var zipByteArray = Convert.FromBase64String(readEArchiveReportResponse.EARCHIVEREPORT);
+                    var zipByteArray = Convert.FromBase64String(node.ChildNodes.GetValue("EARCHIVEREPORT"));
+                    var stream = new MemoryStream(zipByteArray);
+                    var zipArchive = new ZipArchive(stream);
+                    var document = new XmlDocument();
+                    var x = zipArchive.Entries[0].Open();
+                    var zipArchive2 = new ZipArchive(x);
+                    var x2 = zipArchive2.Entries[0].Open();
+                    
+                    var reader = new StreamReader(x2, true);
+                    string nodeStr = reader.ReadToEnd();
+                    //document.LoadXml(eArchiveStr);
+                    var nodeZip = XmlStringToXmlNode2(nodeStr);
+
+                    var baslikStr = nodeZip.ChildNodes[0].ChildNodes[0].GetClass("baslik");
+                    var baslik = XmlStringToXmlNode2(baslikStr);
+
+                    var mukellefStr = baslik.ChildNodes[0].GetClass("mukellef");
+                    var mukellef = XmlStringToXmlNode2(mukellefStr);
+
+                    var hazirlayanStr = baslik.ChildNodes[0].GetClass("hazirlayan");
+                    var hazirlayan = XmlStringToXmlNode2(hazirlayanStr);
+
+                    var serbestMeslekMakbuzIptalStr = nodeZip.ChildNodes[0].ChildNodes[0].GetClass("serbestMeslekMakbuzIptal");
+                    var serbestMeslekMakbuzIptal = XmlStringToXmlNode2(serbestMeslekMakbuzIptalStr);
+
+
+                    readEArchiveReportResponse = new ReadEArchiveReportResponse
+                    {
+                        EARCHIVEREPORT = node.ChildNodes.GetValue("EARCHIVEREPORT"),
+                        RequestReturn = new REQUEST_RETURN
+                        {
+                            INTL_TXN_ID = RequestReturn.ChildNodes[0]?.ChildNodes?.GetValue("INTL_TXN_ID"),
+                            RETURN_CODE = RequestReturn.ChildNodes[0]?.ChildNodes?.GetValue("RETURN_CODE"),
+                        },
+                        eArsivRaporu = new eArsivRaporu
+                        {
+                            baslik = new baslik
+                            {
+                                versiyon = baslik.ChildNodes[0]?.ChildNodes.GetValue("versiyon"),
+                                mukellef = new mukellef
+                                {
+                                    vkn = mukellef.ChildNodes[0]?.ChildNodes.GetValue("vkn"),
+                                },
+                                hazirlayan = new hazirlayan
+                                {
+                                    vkn = hazirlayan.ChildNodes[0]?.ChildNodes.GetValue("vkn"),
+                                },
+                                raporNo = baslik.ChildNodes[0]?.ChildNodes.GetValue("raporNo"),
+                                donemBaslangicTarihi = baslik.ChildNodes[0]?.ChildNodes.GetValue("donemBaslangicTarihi"),
+                                donemBitisTarihi = baslik.ChildNodes[0]?.ChildNodes.GetValue("donemBitisTarihi"),
+                                bolumBaslangicTarihi = baslik.ChildNodes[0]?.ChildNodes.GetValue("bolumBaslangicTarihi"),
+                                bolumBitisTarihi = baslik.ChildNodes[0]?.ChildNodes.GetValue("bolumBitisTarihi"),
+                                bolumNo = baslik.ChildNodes[0]?.ChildNodes.GetValue("bolumNo")
+                            },
+                            serbestMeslekMakbuzIptal = new serbestMeslekMakbuzIptal
+                            {
+                                makbuzNo = serbestMeslekMakbuzIptal.ChildNodes[0]?.ChildNodes.GetValue("makbuzNo"),
+                                iptalTarihi = serbestMeslekMakbuzIptal.ChildNodes[0]?.ChildNodes.GetValue("iptalTarihi"),
+                                toplamTutar = serbestMeslekMakbuzIptal.ChildNodes[0]?.ChildNodes.GetValue("toplamTutar")
+                            }
+                        }
+                    };
+
+                    return new SuccessDataResult<ReadEArchiveReportResponse>(readEArchiveReportResponse);
+                }
+                catch (Exception ex)
+                {
+
+                    throw new Exception(Messages.AnErrorOccurred + ex.Message);
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                return new ErrorDataResult<ReadEArchiveReportResponse>(null, ex.Message);
+            }
+        }
+        public IDataResult<EmailEarchiveInvoiceResponse> EmailEarchiveInvoice(string sessionId, string uuId, string eMail)
+        {
+            try
+            {
+                var res = _iInvoiceDal.GetEmailEarchiveInvoiceRequest(sessionId, uuId, eMail);
+                if (res == null)
+                {
+                    throw new Exception(Messages.NotFoundDataByTableRowID());
+                }
+                if (!res.Success)
+                {
+                    throw new Exception(res.Message);
+                }
+
+                ITemplate<RGetEmailEarchiveInvoiceRequest> template = new GetEmailEarchiveInvoiceXML();
+                var xmlElement = template.Run(res.Data);
+                var xml = xmlElement.ObjectToSoapXml();
+
+                EmailEarchiveInvoiceResponse emailEarchiveInvoiceResponse;
+                IDataResult<XmlDocument> res_ = null;
+
+                try
+                {
+                    Dictionary<string, string> header = new Dictionary<string, string>();
+                    header.Add("Content-Type", "text/xml; charset='UTF - 8'");
+
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EIArchiveWS/EFaturaArchive", xml, "POST", header);
+
+                    if (res_ == null)
+                    {
+                        throw new Exception(Messages.NotNull("Response"));
+                    }
+                    if (!res_.Success)
+                    {
+                        throw new Exception(res_.Message);
+                    }
+
+                    var node = res_.Data.ChildNodes[1].ChildNodes[0].ChildNodes[0];
+
+                    var RequestReturnStr = node.GetClass("REQUEST_RETURN");
+                    var RequestReturn = XmlStringToXmlNode2(RequestReturnStr);
+
+                    emailEarchiveInvoiceResponse = new EmailEarchiveInvoiceResponse
+                    {
+                        RequestReturn = new REQUEST_RETURN
+                        {
+                            INTL_TXN_ID = RequestReturn.ChildNodes[0].ChildNodes.GetValue("INTL_TXN_ID"),
+                            RETURN_CODE = RequestReturn.ChildNodes[0].ChildNodes.GetValue("RETURN_CODE")
+                        }
+                    };
+
+                    return new SuccessDataResult<EmailEarchiveInvoiceResponse>(emailEarchiveInvoiceResponse);
+                }
+                catch (Exception ex)
+                {
+
+                    throw new Exception(Messages.AnErrorOccurred + ex.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new ErrorDataResult<EmailEarchiveInvoiceResponse>(null, ex.Message);
+            }
+        }
 
         //E-ARCHIVE
-
-        //public static XmlNode XmlStringToXmlNode(string xmlInputString)
-        //{
-        //    if (String.IsNullOrEmpty(xmlInputString.Trim())) { throw new ArgumentNullException("xmlInputString"); }
-        //    var xd = new XmlDocument();
-        //    using (var sr = new StringReader(xmlInputString))
-        //    {
-        //        xd.Load(sr);
-        //    }
-        //    return xd;
-        //}
-
-        //public static XmlNode XmlStringToXmlNode2(string xmlInputString)
-        //{
-        //    if (String.IsNullOrEmpty(xmlInputString.Trim())) { throw new ArgumentNullException("xmlInputString"); }
-        //    var xd = new XmlDocument();
-        //    using (var sr = new StringReader("<fatura>" + xmlInputString + "</fatura>"))
-        //    {
-        //        xd.Load(sr);
-        //    }
-        //    return xd;
-        //}
-        //public static XmlNode XmlStringToXmlNode2(string xmlInputString)
-        //{
-        //    if (!String.IsNullOrEmpty(xmlInputString.Trim()))
-        //    {
-        //        var xd = new XmlDocument();
-        //        using (var sr = new StringReader("<fatura>" + xmlInputString + "</fatura>"))
-        //        {
-        //            xd.Load(sr);
-        //        }
-        //        return xd;
-        //    }
-        //    return null;
-        //}
-
 
     }
 }

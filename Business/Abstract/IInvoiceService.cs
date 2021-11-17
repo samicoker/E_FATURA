@@ -26,6 +26,9 @@ namespace Business.Abstract
         IDataResult<CancelEArchiveInvoiceResponse> CancelEArchiveInvoice(string sessionId, string uuid);
         IDataResult<GetEArchiveInvoiceStatusResponse> EArchiveInvoiceStatus(string sessionId, string uuid);
         IDataResult<GetEArchiveReportResponse> EArchiveReport(string sessionId, string reportPeriod, string reportStatus = "Y");
+        IDataResult<ReadEArchiveReportResponse> ReadEArchiveReport(string sessionId, string raporNo);
+        IDataResult<EmailEarchiveInvoiceResponse> EmailEarchiveInvoice(string sessionId, string uuId, string eMail);
+
         //EARCHIVE
     }
 }

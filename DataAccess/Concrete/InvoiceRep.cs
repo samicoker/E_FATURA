@@ -721,7 +721,6 @@ namespace DataAccess.Concrete
 
             return new SuccessDataResult<RWriteToArchieveExtendedRequest>(rWriteToArchieveExtendedRequest);
         }
-        
         public IDataResult<RReadFromArchiveRequest> GetReadFromArchive(string sessionId, string invoiceId)
         {
             RReadFromArchiveRequest rReadFromArchiveRequest = new()
@@ -737,7 +736,6 @@ namespace DataAccess.Concrete
 
             return new SuccessDataResult<RReadFromArchiveRequest>(rReadFromArchiveRequest);
         }
-
         public IDataResult<RCancelEArchiveInvoiceRequest> GetCancelEArchiveInvoice(string sessionId, string uuid)
         {
             RCancelEArchiveInvoiceRequest rCancelEArchiveInvoice = new()
@@ -754,7 +752,6 @@ namespace DataAccess.Concrete
 
             return new SuccessDataResult<RCancelEArchiveInvoiceRequest>(rCancelEArchiveInvoice);
         }
-
         public IDataResult<RGetEArchiveInvoiceStatusRequest> GetEArchiveInvoiceStatus(string sessionId, string uuid)
         {
             RGetEArchiveInvoiceStatusRequest rGetEArchiveInvoiceStatusRequest = new()
@@ -772,7 +769,6 @@ namespace DataAccess.Concrete
 
             return new SuccessDataResult<RGetEArchiveInvoiceStatusRequest>(rGetEArchiveInvoiceStatusRequest);
         }
-
         public IDataResult<RGetEArchiveReportRequest> GetEArchiveReportRequest(string sessionId, string reportPeriod, string reportStatus = "Y")
         {
             RGetEArchiveReportRequest rGetEArchiveReportRequest = new RGetEArchiveReportRequest
@@ -784,7 +780,37 @@ namespace DataAccess.Concrete
 
             return new SuccessDataResult<RGetEArchiveReportRequest>(rGetEArchiveReportRequest);
         }
+        public IDataResult<RReadEArchiveReportRequest> GetReadEArchiveReportRequest(string sessionId, string raporNo)
+        {
+            RReadEArchiveReportRequest rReadEArchiveReportRequest = new RReadEArchiveReportRequest
+            {
+                BodyRead = new BODYREAD
+                {
+                    RequestHeader = new REQUEST_HEADER_INVOICE
+                    {
+                        SESSION_ID = sessionId,
+                    },
+                    RaporNo = raporNo
+                }
+            };
 
+            return new SuccessDataResult<RReadEArchiveReportRequest>(rReadEArchiveReportRequest);
+        }
+
+        public IDataResult<RGetEmailEarchiveInvoiceRequest> GetEmailEarchiveInvoiceRequest(string sessionId, string uuId, string eMail)
+        {
+            RGetEmailEarchiveInvoiceRequest rGetEmailEarchiveInvoiceRequest = new RGetEmailEarchiveInvoiceRequest
+            {
+                RequestHeader = new REQUEST_HEADER_INVOICE
+                {
+                    SESSION_ID = sessionId,
+                },
+                FATURA_UUID = uuId,
+                EMAIL = eMail
+            };
+
+            return new SuccessDataResult<RGetEmailEarchiveInvoiceRequest>(rGetEmailEarchiveInvoiceRequest);
+        }
         // ARCHIVE
 
     }
