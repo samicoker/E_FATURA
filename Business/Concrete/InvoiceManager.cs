@@ -27,7 +27,7 @@ namespace Business.Concrete
             _iInvoiceDal = invoiceDal;
         }
 
-        // AUTHENTICATION
+        #region AUTHENTICATION
         public IDataResult<LoginResponse> GetLogin(string userName, string password)
         {
             try
@@ -173,10 +173,9 @@ namespace Business.Concrete
                 return new ErrorDataResult<LogOutResponse>(null, ex.Message);
             }
         }
+        #endregion
 
-        // AUTHENTICATION
-
-        //E-INVOICE
+        #region E-INVOICE
         public IDataResult<SendInvoiceResponse> SendInvoice(string sessionId)
         {
             try
@@ -1105,9 +1104,9 @@ namespace Business.Concrete
             }
         }
 
-        //E-INVOICE
+        #endregion
 
-        //E-ARCHIVE
+        #region E-ARCHIVE
         public IDataResult<WriteToArchieveExtendedResponse> WriteToArchieveExtended(string sessionId)
         {
             try
@@ -2060,8 +2059,8 @@ namespace Business.Concrete
                 return new ErrorDataResult<EmailEarchiveInvoiceResponse>(null, ex.Message);
             }
         }
-
-        //E-ARCHIVE
+       
+        #endregion
 
     }
 }
