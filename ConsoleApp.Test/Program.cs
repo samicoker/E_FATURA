@@ -41,28 +41,27 @@ namespace ConsoleApp.Test
                 }
             };
 
-            string session = "9828f8ad-77b4-4534-97cc-3fe04dc73351";
+            string session = "8c06b950-e258-4ff5-b631-cc5aab8140d3";
 
             //var res = example.GetLogin("izibiz-test2", "izi321");
             //var res = example.GetLogOut(session);
+
+
             //var res = example.SendInvoice(session);
-            //var res = example.GetInvoice(session, 1);
+            var res = example.GetInvoice(session, 2);
             //var res = example.MarkInvoice(session, invoices);
             //var res = example.GetGibUserList(session);
             //var res = example.GetInvoiceStatus(session, invoice);
             //var res = example.SendInvoiceResponseWithServerSign(session, invoice, false);
 
-            // E-Archive
 
             //var res = example.WriteToArchieveExtended(session);
             //var res = example.ReadFromArchive(session,invoice);
             //var res = example.CancelEArchiveInvoice(session, invoice.UUID);
             //var res = example.EArchiveInvoiceStatus(session, invoice.UUID);
-            var res = example.EArchiveReport(session, "202110");
+            //var res = example.EArchiveReport(session, "202110");
             //var res = example.ReadEArchiveReport(session, "b251241e-3439-4c54-a6dd-ba52a690f8d3");
             //var res = example.EmailEarchiveInvoice(session, "93C30A9C-12C4-4C75-B97C-51013D2FA45F", "a@a.com.tr");
-
-            // E-Archive
 
             var sonuc = res.Data;
             //var sessionId = sonuc.SessionId;

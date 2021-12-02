@@ -43,6 +43,7 @@ namespace Entities.Dtos.Request
         public TaxTotal TaxTotal { get; set; }
         public LegalMonetaryTotal LegalMonetaryTotal { get; set; }
         public InvoiceLine InvoiceLine { get; set; }
+        public List<InvoiceLine> InvoiceLines { get; set; }
     }
     public class PricingExchangeRate
     {
