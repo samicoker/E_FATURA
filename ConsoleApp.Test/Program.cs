@@ -41,14 +41,14 @@ namespace ConsoleApp.Test
                 }
             };
 
-            string session = "8c06b950-e258-4ff5-b631-cc5aab8140d3";
+            //string session = "8c06b950-e258-4ff5-b631-cc5aab8140d3";
 
-            //var res = example.GetLogin("izibiz-test2", "izi321");
+            var sesres = example.GetLogin("izibiz-test2", "izi321");
             //var res = example.GetLogOut(session);
 
 
             //var res = example.SendInvoice(session);
-            var res = example.GetInvoice(session, 2);
+            var res = example.GetInvoice(sesres.Data.SessionId, 20);
             //var res = example.MarkInvoice(session, invoices);
             //var res = example.GetGibUserList(session);
             //var res = example.GetInvoiceStatus(session, invoice);

@@ -22,12 +22,14 @@ namespace Business.Concrete
     public class InvoiceManager : IInvoiceService
     {
         IInvoiceDal _iInvoiceDal;
+
         public InvoiceManager(IInvoiceDal invoiceDal)
         {
             _iInvoiceDal = invoiceDal;
         }
 
         #region AUTHENTICATION
+
         public IDataResult<LoginResponse> GetLogin(string userName, string password)
         {
             try
@@ -57,7 +59,8 @@ namespace Business.Concrete
                 {
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/AuthenticationWS", xml, "POST", header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/AuthenticationWS", xml, "POST",
+                        header);
 
                     if (res_ == null)
                     {
@@ -83,21 +86,18 @@ namespace Business.Concrete
                     };
 
                     return new SuccessDataResult<LoginResponse>(loginResponse);
-
                 }
                 catch (Exception ex)
                 {
-
                     throw new Exception(Messages.AnErrorOccurred + ex.Message);
                 }
-
             }
             catch (Exception ex)
             {
-
                 return new ErrorDataResult<LoginResponse>(null, ex.Message);
             }
         }
+
         public IDataResult<LogOutResponse> GetLogOut(string sessionId)
         {
             try
@@ -127,7 +127,8 @@ namespace Business.Concrete
                 {
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/AuthenticationWS", xml, "POST", header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/AuthenticationWS", xml, "POST",
+                        header);
 
                     if (res_ == null)
                     {
@@ -158,24 +159,22 @@ namespace Business.Concrete
                     };
 
                     return new SuccessDataResult<LogOutResponse>(logOutResponse);
-
                 }
                 catch (Exception ex)
                 {
-
                     throw new Exception(Messages.AnErrorOccurred + ex.Message);
                 }
-
             }
             catch (Exception ex)
             {
-
                 return new ErrorDataResult<LogOutResponse>(null, ex.Message);
             }
         }
+
         #endregion
 
         #region E-INVOICE
+
         public IDataResult<SendInvoiceResponse> SendInvoice(string sessionId)
         {
             try
@@ -205,7 +204,8 @@ namespace Business.Concrete
                 {
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EFaturaOIB", xml, "POST", header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EFaturaOIB", xml, "POST",
+                        header);
 
                     if (res_ == null)
                     {
@@ -237,18 +237,18 @@ namespace Business.Concrete
                     {
                         getresponseXmlConvertString = res_.Data.InnerText;
                     }
+
                     throw new Exception(Messages.AnErrorOccurred + ex.Message);
                 }
             }
             catch (Exception ex)
             {
-
                 return new ErrorDataResult<SendInvoiceResponse>(null, ex.Message);
             }
         }
+
         public IDataResult<GetInvoiceResponse> GetInvoice(string sessionId, byte limit)
         {
-
             try
             {
                 var res = _iInvoiceDal.GetInvoice(sessionId, limit);
@@ -276,7 +276,8 @@ namespace Business.Concrete
                 {
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EFaturaOIB", xml, "POST", header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EFaturaOIB", xml, "POST",
+                        header);
 
                     if (res_ == null)
                     {
@@ -288,7 +289,8 @@ namespace Business.Concrete
                         throw new Exception(res.Message);
                     }
 
-                    var node = res_.Data.ChildNodes[1].ChildNodes[0].ChildNodes[0].ChildNodes[0];
+                    var baseInvo = res_.Data.ChildNodes[1].ChildNodes[0].ChildNodes[0];
+                    var node = baseInvo.ChildNodes[0];
 
                     if (node == null)
                     {
@@ -299,16 +301,14 @@ namespace Business.Concrete
                     {
                         Invoices = new List<Invoice>(),
                     };
-                    var invoiceCount = res_.Data.ChildNodes[1].ChildNodes[0].ChildNodes[0].ChildNodes.Count;
+                    var invoiceCount = baseInvo.ChildNodes.Count;
 
                     for (int i = 0; i < invoiceCount; i++)
                     {
-
-                        var nodeInvoice = res_.Data.ChildNodes[1].ChildNodes[0].ChildNodes[0].ChildNodes[i];
+                        var nodeInvoice = baseInvo.ChildNodes[i];
 
                         var nodeHeaderStr = nodeInvoice.GetClass("HEADER");
                         var nodeHeader = XmlStringToXmlNode2(nodeHeaderStr);
-
 
 
                         //XmlDocument doc = new XmlDocument();
@@ -320,126 +320,135 @@ namespace Business.Concrete
                         var nodeContentString = Encoding.UTF8.GetString(nodeContentByte);
                         var nodeContent = XmlStringToXmlNode(nodeContentString);
 
-                        var nodeUBLExtensionsStr = nodeContent.ChildNodes[0].GetClass("ext:UBLExtensions");
+                        var nodeUBLExtensionsStr = nodeContent.ChildNodes[0].GetRegexClass("ext:UBLExtensions");
                         var nodeUBLExtensions = XmlStringToXmlNode2(nodeUBLExtensionsStr);
 
-                        var uBLExtensionStr = nodeUBLExtensions.ChildNodes[0].GetClass("ext:UBLExtension");
+                        var uBLExtensionStr = nodeUBLExtensions.ChildNodes[0].GetRegexClass("ext:UBLExtension");
                         var uBLExtensionNode = XmlStringToXmlNode2(uBLExtensionStr);
 
-                        var extensionContentStr = uBLExtensionNode.ChildNodes[0].GetClass("ext:ExtensionContent");
+                        var extensionContentStr = uBLExtensionNode.ChildNodes[0].GetRegexClass("ext:ExtensionContent");
                         var extensionContent = XmlStringToXmlNode2(extensionContentStr);
 
-                        var uBLSignatureStr = extensionContent.ChildNodes[0].GetClass("ds:Signature");
+                        var uBLSignatureStr = extensionContent.ChildNodes[0].GetRegexClass("ds:Signature");
                         var uBLSignature = XmlStringToXmlNode2(uBLSignatureStr);
 
-                        var uBLSignedInfoStr = uBLSignature.ChildNodes[0].GetClass("ds:SignedInfo");
+                        var uBLSignedInfoStr = uBLSignature.ChildNodes[0].GetRegexClass("ds:SignedInfo");
                         var uBLSignedInfo = XmlStringToXmlNode2(uBLSignedInfoStr);
 
-                        var nodeAdditionalDocumentReferenceStr = nodeContent.ChildNodes[0].GetClass("cac:AdditionalDocumentReference");
+                        var nodeAdditionalDocumentReferenceStr =
+                            nodeContent.ChildNodes[0].GetRegexClass("cac:AdditionalDocumentReference");
                         var nodeAdditionalDocumentReference = XmlStringToXmlNode2(nodeAdditionalDocumentReferenceStr);
 
-                        var signatureStr = nodeContent.ChildNodes[0].GetClass("cac:Signature");
+                        var signatureStr = nodeContent.ChildNodes[0].GetRegexClass("cac:Signature");
                         var signature = XmlStringToXmlNode2(signatureStr);
 
-                        var signatoryParyStr = signature?.ChildNodes[0]?.GetClass("cac:SignatoryParty");
+                        var signatoryParyStr = signature?.ChildNodes[0]?.GetRegexClass("cac:SignatoryParty");
                         var signatoryParty = XmlStringToXmlNode2(signatoryParyStr);
 
 
-                        var paryIdentificationStr = signatoryParty?.ChildNodes[0]?.GetClass("cac:PartyIdentification");
+                        var paryIdentificationStr =
+                            signatoryParty?.ChildNodes[0]?.GetRegexClass("cac:PartyIdentification");
                         var partyIdentification = XmlStringToXmlNode2(paryIdentificationStr);
 
-                        var postalAddressStr = signatoryParty?.ChildNodes[0]?.GetClass("cac:PostalAddress");
+                        var postalAddressStr = signatoryParty?.ChildNodes[0]?.GetRegexClass("cac:PostalAddress");
                         var postalAddress = XmlStringToXmlNode2(postalAddressStr);
 
-                        var countryStr = postalAddress?.ChildNodes[0]?.GetClass("cac:Country");
+                        var countryStr = postalAddress?.ChildNodes[0]?.GetRegexClass("cac:Country");
                         var country = XmlStringToXmlNode2(countryStr);
 
                         //cac:PartyTaxScheme
-                        var partyTaxSchemeStr = signatoryParty?.ChildNodes[0]?.GetClass("cac:PartyTaxScheme");
+                        var partyTaxSchemeStr = signatoryParty?.ChildNodes[0]?.GetRegexClass("cac:PartyTaxScheme");
                         var partyTaxScheme = XmlStringToXmlNode2(partyTaxSchemeStr);
 
                         // AccountingSupplierParty //
-                        var accountingSupplierPartyStr = nodeContent.ChildNodes[0]?.GetClass("cac:AccountingSupplierParty");
+                        var accountingSupplierPartyStr =
+                            nodeContent.ChildNodes[0]?.GetRegexClass("cac:AccountingSupplierParty");
                         var accountingSupplierParty = XmlStringToXmlNode2(accountingSupplierPartyStr);
 
-                        var paryAccountingStr = accountingSupplierParty?.ChildNodes[0]?.GetClass("cac:Party");
+                        var paryAccountingStr = accountingSupplierParty?.ChildNodes[0]?.GetRegexClass("cac:Party");
                         var partyAccounting = XmlStringToXmlNode2(paryAccountingStr);
 
-                        var partyIdentificationAccountingStr = partyAccounting?.ChildNodes[0]?.GetClass("cac:PartyIdentification");
+                        var partyIdentificationAccountingStr =
+                            partyAccounting?.ChildNodes[0]?.GetRegexClass("cac:PartyIdentification");
                         var partyIdentificationAccounting = XmlStringToXmlNode2(partyIdentificationAccountingStr);
 
-                        var partyNameAccountingStr = partyAccounting?.ChildNodes[0]?.GetClass("cac:PartyName");
+                        var partyNameAccountingStr = partyAccounting?.ChildNodes[0]?.GetRegexClass("cac:PartyName");
                         var partyNameAccounting = XmlStringToXmlNode2(partyNameAccountingStr);
 
-                        var postalAddressAccountingStr = partyAccounting?.ChildNodes[0]?.GetClass("cac:PostalAddress");
+                        var postalAddressAccountingStr =
+                            partyAccounting?.ChildNodes[0]?.GetRegexClass("cac:PostalAddress");
                         var postalAddressAccounting = XmlStringToXmlNode2(postalAddressAccountingStr);
 
-                        var countryAccountingStr = postalAddressAccounting?.ChildNodes[0]?.GetClass("cac:Country");
+                        var countryAccountingStr = postalAddressAccounting?.ChildNodes[0]?.GetRegexClass("cac:Country");
                         var countryAccounting = XmlStringToXmlNode2(countryAccountingStr);
 
-                        var partyTaxChemeAccountingStr = partyAccounting?.ChildNodes[0]?.GetClass("cac:PartyTaxScheme");
+                        var partyTaxChemeAccountingStr =
+                            partyAccounting?.ChildNodes[0]?.GetRegexClass("cac:PartyTaxScheme");
                         var partyTaxChemeAccounting = XmlStringToXmlNode2(partyTaxChemeAccountingStr);
 
-                        var contactAccountingStr = partyAccounting?.ChildNodes[0]?.GetClass("cac:Contact");
+                        var contactAccountingStr = partyAccounting?.ChildNodes[0]?.GetRegexClass("cac:Contact");
                         var contactAccounting = XmlStringToXmlNode2(contactAccountingStr);
                         // AccountingSupplierParty //
 
                         //AccountingCustomerParty
 
-                        var accountingCustomerPartyStr = nodeContent.ChildNodes[0]?.GetClass("cac:AccountingCustomerParty");
+                        var accountingCustomerPartyStr =
+                            nodeContent.ChildNodes[0]?.GetRegexClass("cac:AccountingCustomerParty");
                         var accountingCustomerParty = XmlStringToXmlNode2(accountingCustomerPartyStr);
 
-                        var paryCustomerStr = accountingCustomerParty?.ChildNodes[0]?.GetClass("cac:Party");
+                        var paryCustomerStr = accountingCustomerParty?.ChildNodes[0]?.GetRegexClass("cac:Party");
                         var partyCustomer = XmlStringToXmlNode2(paryCustomerStr);
-                    
 
-                        var partyIdentificationCustomerStr = partyCustomer?.ChildNodes[0]?.GetClass("cac:PartyIdentification");
+
+                        var partyIdentificationCustomerStr =
+                            partyCustomer?.ChildNodes[0]?.GetRegexClass("cac:PartyIdentification");
                         var partyIdentificationCustomer = XmlStringToXmlNode2(partyIdentificationCustomerStr);
 
-                        var partyNameCustomerStr = partyCustomer?.ChildNodes[0]?.GetClass("cac:PartyName");
+                        var partyNameCustomerStr = partyCustomer?.ChildNodes[0]?.GetRegexClass("cac:PartyName");
                         var partyNameCustomer = XmlStringToXmlNode2(partyNameCustomerStr);
 
-                        var postalAddressCustomerStr = partyCustomer?.ChildNodes[0]?.GetClass("cac:PostalAddress");
+                        var postalAddressCustomerStr = partyCustomer?.ChildNodes[0]?.GetRegexClass("cac:PostalAddress");
                         var postalAddressCustomer = XmlStringToXmlNode2(postalAddressCustomerStr);
 
-                        var countryCustomerStr = postalAddressCustomer?.ChildNodes[0]?.GetClass("cac:Country");
+                        var countryCustomerStr = postalAddressCustomer?.ChildNodes[0]?.GetRegexClass("cac:Country");
                         var countryCustomer = XmlStringToXmlNode2(countryCustomerStr);
 
-                        var partyTaxChemeCustomerStr = partyCustomer?.ChildNodes[0]?.GetClass("cac:PartyTaxScheme");
+                        var partyTaxChemeCustomerStr =
+                            partyCustomer?.ChildNodes[0]?.GetRegexClass("cac:PartyTaxScheme");
                         var partyTaxChemeCustomer = XmlStringToXmlNode2(partyTaxChemeCustomerStr);
 
-                        var contactCustomerStr = partyCustomer?.ChildNodes[0]?.GetClass("cac:Contact");
+                        var contactCustomerStr = partyCustomer?.ChildNodes[0]?.GetRegexClass("cac:Contact");
                         var contactCustomer = XmlStringToXmlNode2(contactCustomerStr);
 
                         //AccountingCustomerParty
 
                         // AllowanceCharge
 
-                        var allowanceChargeStr = nodeContent.ChildNodes[0]?.GetClassess("cac:AllowanceCharge");
+                        var allowanceChargeStr = nodeContent.ChildNodes[0]?.GetClasses("cac:AllowanceCharge");
 
                         // AllowanceCharge
 
                         // TaxTotal
-                        var taxTotalStr = nodeContent.ChildNodes[0]?.GetClass("cac:TaxTotal");
+                        var taxTotalStr = nodeContent.ChildNodes[0]?.GetRegexClass("cac:TaxTotal");
                         var taxTotal = XmlStringToXmlNode2(taxTotalStr);
 
-                        var taxSubTotalStr = taxTotal?.ChildNodes[0]?.GetClass("cac:TaxSubtotal");
+                        var taxSubTotalStr = taxTotal?.ChildNodes[0]?.GetRegexClass("cac:TaxSubtotal");
                         var taxSubTotal = XmlStringToXmlNode2(taxSubTotalStr);
 
-                        var taxCategoryStr = taxSubTotal?.ChildNodes[0]?.GetClass("cac:TaxCategory");
+                        var taxCategoryStr = taxSubTotal?.ChildNodes[0]?.GetRegexClass("cac:TaxCategory");
                         var taxCategory = XmlStringToXmlNode2(taxCategoryStr);
 
-                        var taxShemeStr = taxCategory?.ChildNodes[0]?.GetClass("cac:TaxScheme");
+                        var taxShemeStr = taxCategory?.ChildNodes[0]?.GetRegexClass("cac:TaxScheme");
                         var taxSheme = XmlStringToXmlNode2(taxShemeStr);
 
 
-                        var legalMonetaryTotalStr = nodeContent.ChildNodes[0].GetClass("cac:LegalMonetaryTotal");
+                        var legalMonetaryTotalStr = nodeContent.ChildNodes[0].GetRegexClass("cac:LegalMonetaryTotal");
                         var legalMonetaryTotal = XmlStringToXmlNode2(legalMonetaryTotalStr);
 
                         //var invoiceLineStr = nodeContent.ChildNodes[0]?.GetClass("cac:InvoiceLine");
                         //var invoiceLine = XmlStringToXmlNode2(invoiceLineStr); // dizi olacak getClassess
 
-                        var invoiceLinesStr = nodeContent.ChildNodes[0]?.GetClassess("cac:InvoiceLine");
+                        var invoiceLinesStr = nodeContent.ChildNodes[0]?.GetRegexClasses("cac:InvoiceLine");
 
 
                         //List<string> notes = new List<string>();
@@ -482,7 +491,8 @@ namespace Business.Concrete
                         {
                             Header = new Header
                             {
-                                SENDER = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("SENDER"), //res_.Data.GetElementsByTagName("SENDER")[0].InnerText,
+                                SENDER = nodeHeader?.ChildNodes[0]?.ChildNodes
+                                    ?.GetValue("SENDER"), //res_.Data.GetElementsByTagName("SENDER")[0].InnerText,
                                 RECEIVER = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("RECEIVER"),
                                 SUPPLIER = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("SUPPLIER"),
                                 CUSTOMER = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("CUSTOMER"),
@@ -491,35 +501,45 @@ namespace Business.Concrete
                                 FROM = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("FROM"),
                                 TO = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("TO"),
                                 PROFILEID = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("PROFILEID"),
-                                INVOICE_TYPE_CODE = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("INVOICE_TYPE_CODE"),
+                                INVOICE_TYPE_CODE =
+                                    nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("INVOICE_TYPE_CODE"),
                                 STATUS = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("STATUS"),
-                                STATUS_DESCRIPTION = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("STATUS_DESCRIPTION"),
+                                STATUS_DESCRIPTION =
+                                    nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("STATUS_DESCRIPTION"),
                                 GIB_STATUS_CODE = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("GIB_STATUS_CODE"),
-                                GIB_STATUS_DESCRIPTION = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("GIB_STATUS_DESCRIPTION"),
+                                GIB_STATUS_DESCRIPTION = nodeHeader?.ChildNodes[0]?.ChildNodes
+                                    ?.GetValue("GIB_STATUS_DESCRIPTION"),
                                 CDATE = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("CDATE"),
-                                ENVELOPE_IDENTIFIER = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("ENVELOPE_IDENTIFIER"),
+                                ENVELOPE_IDENTIFIER = nodeHeader?.ChildNodes[0]?.ChildNodes
+                                    ?.GetValue("ENVELOPE_IDENTIFIER"),
                                 STATUS_CODE = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("STATUS_CODE"),
                             },
                             CONTENT = new CONTENT
                             {
                                 UBLExtensions = new List<UBLExtension>() { },
                                 UBLVersionID = nodeContent?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:UBLVersionID"),
-                                CustomizationID = nodeContent?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CustomizationID"),
+                                CustomizationID = nodeContent?.ChildNodes[0]?.ChildNodes
+                                    ?.GetValue("cbc:CustomizationID"),
                                 ProfileID = nodeContent?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ProfileID"),
                                 ID = nodeContent?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
                                 CopyIndicator = nodeContent?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CopyIndicator"),
                                 UUID = nodeContent?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:UUID"),
                                 IssueDate = nodeContent?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:IssueDate"),
                                 IssueTime = nodeContent?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:IssueTime"),
-                                InvoiceTypeCode = nodeContent?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:InvoiceTypeCode"),
+                                InvoiceTypeCode = nodeContent?.ChildNodes[0]?.ChildNodes
+                                    ?.GetValue("cbc:InvoiceTypeCode"),
                                 Note = nodeContent?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Note"),
-                                DocumentCurrencyCode = nodeContent?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:DocumentCurrencyCode"),
-                                LineCountNumeric = nodeContent?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:LineCountNumeric"),
+                                DocumentCurrencyCode = nodeContent?.ChildNodes[0]?.ChildNodes
+                                    ?.GetValue("cbc:DocumentCurrencyCode"),
+                                LineCountNumeric = nodeContent?.ChildNodes[0]?.ChildNodes
+                                    ?.GetValue("cbc:LineCountNumeric"),
                                 AdditionalDocumentReference = new AdditionalDocumentReference
                                 {
                                     ID = nodeAdditionalDocumentReference?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
-                                    IssueDate = nodeAdditionalDocumentReference?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:IssueDate"),
-                                    DocumentType = nodeAdditionalDocumentReference?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:DocumentType"),
+                                    IssueDate = nodeAdditionalDocumentReference?.ChildNodes[0]?.ChildNodes
+                                        ?.GetValue("cbc:IssueDate"),
+                                    DocumentType = nodeAdditionalDocumentReference?.ChildNodes[0]?.ChildNodes
+                                        ?.GetValue("cbc:DocumentType"),
                                     Attachment = new Attachment(),
                                 },
                                 Signature = new Signature
@@ -535,13 +555,20 @@ namespace Business.Concrete
                                         {
                                             ID = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
                                             Room = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Room"),
-                                            StreetName = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:StreetName"),
-                                            BuildingNumber = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingNumber"),
-                                            CitySubdivisionName = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CitySubdivisionName"),
-                                            CityName = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CityName"),
-                                            PostalZone = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:PostalZone"),
-                                            District = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:District"),
-                                            BuildingName = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingName"),
+                                            StreetName = postalAddress?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:StreetName"),
+                                            BuildingNumber = postalAddress?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:BuildingNumber"),
+                                            CitySubdivisionName = postalAddress?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:CitySubdivisionName"),
+                                            CityName = postalAddress?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:CityName"),
+                                            PostalZone = postalAddress?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:PostalZone"),
+                                            District = postalAddress?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:District"),
+                                            BuildingName = postalAddress?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:BuildingName"),
                                             Region = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Region"),
                                             Country = new Country
                                             {
@@ -554,11 +581,16 @@ namespace Business.Concrete
                                 {
                                     Party = new Party
                                     {
-                                        WebsiteURI = partyAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:WebsiteURI"),
+                                        WebsiteURI = partyAccounting?.ChildNodes[0]?.ChildNodes
+                                            ?.GetValue("cbc:WebsiteURI"),
                                         PartyIdentifications = new List<PartyIdentification>
-                                {
-                                    new PartyIdentification{ ID = partyIdentificationAccounting?.ChildNodes[0]?.ChildNodes.GetValue("cbc:ID"), }
-                                },
+                                        {
+                                            new PartyIdentification
+                                            { 
+                                                ID = partyIdentificationAccounting?.ChildNodes[0]?.ChildNodes
+                                                    .GetValue("cbc:ID"),
+                                            }
+                                        },
                                         PartyName = new PartyName
                                         {
                                             Name = partyNameAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
@@ -566,32 +598,46 @@ namespace Business.Concrete
                                         PostalAddress = new PostalAddress
                                         {
                                             ID = postalAddressAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
-                                            Room = postalAddressAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Room"),
-                                            StreetName = postalAddressAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:StreetName"),
-                                            BuildingNumber = postalAddressAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingNumber"),
-                                            CitySubdivisionName = postalAddressAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CitySubdivisionName"),
-                                            CityName = postalAddressAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CityName"),
-                                            PostalZone = postalAddressAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:PostalZone"),
-                                            District = postalAddressAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:District"),
-                                            BuildingName = postalAddressAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingName"),
-                                            Region = postalAddressAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Region"),
+                                            Room = postalAddressAccounting?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:Room"),
+                                            StreetName = postalAddressAccounting?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:StreetName"),
+                                            BuildingNumber = postalAddressAccounting?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:BuildingNumber"),
+                                            CitySubdivisionName = postalAddressAccounting?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:CitySubdivisionName"),
+                                            CityName = postalAddressAccounting?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:CityName"),
+                                            PostalZone = postalAddressAccounting?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:PostalZone"),
+                                            District = postalAddressAccounting?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:District"),
+                                            BuildingName = postalAddressAccounting?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:BuildingName"),
+                                            Region = postalAddressAccounting?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:Region"),
                                             Country = new Country
                                             {
-                                                Name = countryAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
+                                                Name = countryAccounting?.ChildNodes[0]?.ChildNodes
+                                                    ?.GetValue("cbc:Name"),
                                             }
                                         },
                                         PartyTaxSheme = new PartyTaxScheme
                                         {
                                             TaxScheme = new TaxScheme
                                             {
-                                                Name = partyTaxChemeAccounting?.ChildNodes[0]?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
+                                                Name = partyTaxChemeAccounting?.ChildNodes[0]?.ChildNodes[0]?.ChildNodes
+                                                    ?.GetValue("cbc:Name"),
                                             }
                                         },
                                         Contact = new ContactInv
                                         {
-                                            Telephone = contactAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Telephone"),
-                                            Telefax = contactAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Telefax"),
-                                            ElectronicMail = contactAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ElectronicMail"),
+                                            Telephone = contactAccounting?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:Telephone"),
+                                            Telefax = contactAccounting?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:Telefax"),
+                                            ElectronicMail = contactAccounting?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:ElectronicMail"),
                                             Note = contactAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Note"),
                                         }
                                     }
@@ -600,11 +646,16 @@ namespace Business.Concrete
                                 {
                                     Party = new Party
                                     {
-                                        WebsiteURI = partyCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:WebsiteURI"),
+                                        WebsiteURI = partyCustomer?.ChildNodes[0]?.ChildNodes
+                                            ?.GetValue("cbc:WebsiteURI"),
                                         PartyIdentifications = new List<PartyIdentification>()
-                                {
-                                    new PartyIdentification{ ID = partyIdentificationAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"), }
-                                },
+                                        {
+                                            new PartyIdentification
+                                            {
+                                                ID = partyIdentificationCustomer?.ChildNodes[0]?.ChildNodes
+                                                    ?.GetValue("cbc:ID"),
+                                            }
+                                        },
                                         PartyName = new PartyName
                                         {
                                             Name = partyNameCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
@@ -612,15 +663,24 @@ namespace Business.Concrete
                                         PostalAddress = new PostalAddress
                                         {
                                             ID = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
-                                            Room = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Room"),
-                                            StreetName = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:StreetName"),
-                                            BuildingNumber = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingNumber"),
-                                            CitySubdivisionName = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CitySubdivisionName"),
-                                            CityName = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CityName"),
-                                            PostalZone = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:PostalZone"),
-                                            District = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:District"),
-                                            BuildingName = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingName"),
-                                            Region = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Region"),
+                                            Room = postalAddressCustomer?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:Room"),
+                                            StreetName = postalAddressCustomer?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:StreetName"),
+                                            BuildingNumber = postalAddressCustomer?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:BuildingNumber"),
+                                            CitySubdivisionName = postalAddressCustomer?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:CitySubdivisionName"),
+                                            CityName = postalAddressCustomer?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:CityName"),
+                                            PostalZone = postalAddressCustomer?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:PostalZone"),
+                                            District = postalAddressCustomer?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:District"),
+                                            BuildingName = postalAddressCustomer?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:BuildingName"),
+                                            Region = postalAddressCustomer?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:Region"),
                                             Country = new Country
                                             {
                                                 Name = countryCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
@@ -630,14 +690,18 @@ namespace Business.Concrete
                                         {
                                             TaxScheme = new TaxScheme
                                             {
-                                                Name = partyTaxChemeCustomer?.ChildNodes[0]?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
+                                                Name = partyTaxChemeCustomer?.ChildNodes[0]?.ChildNodes[0]?.ChildNodes
+                                                    ?.GetValue("cbc:Name"),
                                             }
                                         },
                                         Contact = new ContactInv
                                         {
-                                            Telephone = contactCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Telephone"),
-                                            Telefax = contactCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Telefax"),
-                                            ElectronicMail = contactCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ElectronicMail"),
+                                            Telephone = contactCustomer?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:Telephone"),
+                                            Telefax = contactCustomer?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:Telefax"),
+                                            ElectronicMail = contactCustomer?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:ElectronicMail"),
                                             Note = contactCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Note"),
                                             Name = contactCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name")
                                         }
@@ -649,30 +713,39 @@ namespace Business.Concrete
                                     TaxAmount = taxTotal?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxAmount"),
                                     TaxSubtotal = new TaxSubtotal
                                     {
-                                        TaxableAmount = taxSubTotal?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxableAmount"),
+                                        TaxableAmount = taxSubTotal?.ChildNodes[0]?.ChildNodes
+                                            ?.GetValue("cbc:TaxableAmount"),
                                         TaxAmount = taxSubTotal?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxAmount"),
-                                        CalculationSequenceNumeric = taxSubTotal?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CalculationSequenceNumeric"),
+                                        CalculationSequenceNumeric = taxSubTotal?.ChildNodes[0]?.ChildNodes
+                                            ?.GetValue("cbc:CalculationSequenceNumeric"),
                                         Percent = taxSubTotal?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Percent"),
                                         TaxCategory = new TaxCategory
                                         {
-                                            TaxExemptionReasonCode = taxCategory?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxExemptionReasonCode"),
-                                            TaxExemptionReason = taxCategory?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxExemptionReason"),
+                                            TaxExemptionReasonCode = taxCategory?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:TaxExemptionReasonCode"),
+                                            TaxExemptionReason = taxCategory?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:TaxExemptionReason"),
                                             TaxScheme = new TaxScheme
                                             {
                                                 Name = taxSheme?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
-                                                TaxTypeCode = taxSheme?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxTypeCode"),
+                                                TaxTypeCode = taxSheme?.ChildNodes[0]?.ChildNodes
+                                                    ?.GetValue("cbc:TaxTypeCode"),
                                             }
                                         }
                                     }
                                 },
                                 LegalMonetaryTotal = new LegalMonetaryTotal
                                 {
-                                    LineExtensionAmount = legalMonetaryTotal?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:LineExtensionAmount"),
-                                    TaxExclusiveAmount = legalMonetaryTotal?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxExclusiveAmount"),
-                                    TaxInclusiveAmount = legalMonetaryTotal?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxInclusiveAmount"),
-                                    PayableAmount = legalMonetaryTotal?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:PayableAmount"),
-
+                                    LineExtensionAmount = legalMonetaryTotal?.ChildNodes[0]?.ChildNodes
+                                        ?.GetValue("cbc:LineExtensionAmount"),
+                                    TaxExclusiveAmount = legalMonetaryTotal?.ChildNodes[0]?.ChildNodes
+                                        ?.GetValue("cbc:TaxExclusiveAmount"),
+                                    TaxInclusiveAmount = legalMonetaryTotal?.ChildNodes[0]?.ChildNodes
+                                        ?.GetValue("cbc:TaxInclusiveAmount"),
+                                    PayableAmount = legalMonetaryTotal?.ChildNodes[0]?.ChildNodes
+                                        ?.GetValue("cbc:PayableAmount"),
                                 },
+                                InvoiceLines = new List<InvoiceLine>()
                                 //InvoiceLine = new InvoiceLine
                                 //{
                                 //    ID = invoiceLine?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
@@ -724,8 +797,6 @@ namespace Business.Concrete
                                 //    }
                                 //}
                             }
-
-
                         };
 
                         for (int j = 0; j < nodeUBLExtensions.ChildNodes.Count; j++)
@@ -738,8 +809,10 @@ namespace Business.Concrete
                                     {
                                         SignedInfo = new SignedInfo
                                         {
-                                            CanonicalizationMethod = uBLSignedInfo?.ChildNodes[0]?.ChildNodes?.GetValue("ds:CanonicalizationMethod"),
-                                            SignatureMethod = uBLSignedInfo?.ChildNodes[0]?.ChildNodes?.GetValue("ds:SignatureMethod"),
+                                            CanonicalizationMethod = uBLSignedInfo?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("ds:CanonicalizationMethod"),
+                                            SignatureMethod = uBLSignedInfo?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("ds:SignatureMethod"),
                                         }
                                     }
                                 }
@@ -752,10 +825,14 @@ namespace Business.Concrete
                             var allowanceCharge = XmlStringToXmlNode2(allowanceChargeStr[j]);
                             AllowanceCharge model = new AllowanceCharge
                             {
-                                ChargeIndicator = allowanceCharge?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ChargeIndicator"),
-                                AllowanceChargeReason = allowanceCharge?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:AllowanceChargeReason"),
-                                MultiplierFactorNumeric = allowanceCharge?.ChildNodes[0].ChildNodes?.GetValue("cbc:MultiplierFactorNumeric"),
-                                SequenceNumeric = allowanceCharge?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:SequenceNumeric"),
+                                ChargeIndicator = allowanceCharge?.ChildNodes[0]?.ChildNodes
+                                    ?.GetValue("cbc:ChargeIndicator"),
+                                AllowanceChargeReason = allowanceCharge?.ChildNodes[0]?.ChildNodes
+                                    ?.GetValue("cbc:AllowanceChargeReason"),
+                                MultiplierFactorNumeric = allowanceCharge?.ChildNodes[0].ChildNodes
+                                    ?.GetValue("cbc:MultiplierFactorNumeric"),
+                                SequenceNumeric = allowanceCharge?.ChildNodes[0]?.ChildNodes
+                                    ?.GetValue("cbc:SequenceNumeric"),
                                 Amount = allowanceCharge?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Amount"),
                             };
                             invoice.CONTENT.AllowanceCharges.Add(model);
@@ -799,19 +876,23 @@ namespace Business.Concrete
                                 notes = invoiceLines?.ChildNodes[0]?.ChildNodes.GetValues("cbc:Note");
 
 
-                                var orderLineReferenceStr = invoiceLines?.ChildNodes[0]?.GetClass("cac:OrderLineReference");
+                                var orderLineReferenceStr =
+                                    invoiceLines?.ChildNodes[0]?.GetClass("cac:OrderLineReference");
                                 var orderLineReference = XmlStringToXmlNode2(orderLineReferenceStr);
 
                                 var taxTotalInvoiceLineStr = invoiceLines?.ChildNodes[0]?.GetClass("cac:TaxTotal");
                                 var taxTotalInvoiceLine = XmlStringToXmlNode2(taxTotalInvoiceLineStr);
 
-                                var taxSubTotalInvoiceLineStr = taxTotalInvoiceLine?.ChildNodes[0]?.GetClass("cac:TaxSubtotal");
+                                var taxSubTotalInvoiceLineStr =
+                                    taxTotalInvoiceLine?.ChildNodes[0]?.GetClass("cac:TaxSubtotal");
                                 var taxSubTotalInvoiceLine = XmlStringToXmlNode2(taxSubTotalInvoiceLineStr);
 
-                                var taxCategoryInvoiceLineStr = taxSubTotalInvoiceLine?.ChildNodes[0]?.GetClass("cac:TaxCategory");
+                                var taxCategoryInvoiceLineStr =
+                                    taxSubTotalInvoiceLine?.ChildNodes[0]?.GetClass("cac:TaxCategory");
                                 var taxCategoryInvoiceLine = XmlStringToXmlNode2(taxCategoryInvoiceLineStr);
 
-                                var taxSchemeInvoiceLineStr = taxCategoryInvoiceLine?.ChildNodes[0]?.GetClass("cac:TaxScheme");
+                                var taxSchemeInvoiceLineStr =
+                                    taxCategoryInvoiceLine?.ChildNodes[0]?.GetClass("cac:TaxScheme");
                                 var taxSchemeInvoiceLine = XmlStringToXmlNode2(taxSchemeInvoiceLineStr);
 
                                 // TaxTotal
@@ -819,13 +900,15 @@ namespace Business.Concrete
                                 var itemStr = invoiceLines?.ChildNodes[0]?.GetClass("cac:Item");
                                 var item = XmlStringToXmlNode2(itemStr);
 
-                                var sellersItemIdentificationStr = item?.ChildNodes[0]?.GetClass("cac:SellersItemIdentification");
+                                var sellersItemIdentificationStr =
+                                    item?.ChildNodes[0]?.GetClass("cac:SellersItemIdentification");
                                 var sellersItemIdentification = XmlStringToXmlNode2(sellersItemIdentificationStr);
 
                                 var originCountryStr = item?.ChildNodes[0]?.GetClass("cac:OriginCountry");
                                 var originCountry = XmlStringToXmlNode2(originCountryStr);
 
-                                var commodityClassificationStr = item?.ChildNodes[0]?.GetClassess("cac:CommodityClassification");
+                                var commodityClassificationStr =
+                                    item?.ChildNodes[0]?.GetClasses("cac:CommodityClassification");
 
                                 var priceStr = invoiceLines?.ChildNodes[0]?.GetClass("cac:Price");
                                 var price = XmlStringToXmlNode2(priceStr);
@@ -834,29 +917,40 @@ namespace Business.Concrete
                                 {
                                     ID = invoiceLines?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
                                     Notes = new List<string>(),
-                                    InvoicedQuantity = invoiceLines?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:InvoicedQuantity"),
-                                    LineExtensionAmount = invoiceLines?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:LineExtensionAmount"),
+                                    InvoicedQuantity = invoiceLines?.ChildNodes[0]?.ChildNodes
+                                        ?.GetValue("cbc:InvoicedQuantity"),
+                                    LineExtensionAmount = invoiceLines?.ChildNodes[0]?.ChildNodes
+                                        ?.GetValue("cbc:LineExtensionAmount"),
                                     OrderLineReference = new OrderLineReference
                                     {
                                         LineID = orderLineReference?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:LineID")
                                     },
                                     TaxTotal = new TaxTotal
                                     {
-                                        TaxAmount = taxTotalInvoiceLine?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxAmount"),
+                                        TaxAmount = taxTotalInvoiceLine?.ChildNodes[0]?.ChildNodes
+                                            ?.GetValue("cbc:TaxAmount"),
                                         TaxSubtotal = new TaxSubtotal
                                         {
-                                            TaxableAmount = taxSubTotalInvoiceLine?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxableAmount"),
-                                            TaxAmount = taxSubTotalInvoiceLine?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxAmount"),
-                                            CalculationSequenceNumeric = taxSubTotalInvoiceLine?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CalculationSequenceNumeric"),
-                                            Percent = taxSubTotalInvoiceLine?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Percent"),
+                                            TaxableAmount = taxSubTotalInvoiceLine?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:TaxableAmount"),
+                                            TaxAmount = taxSubTotalInvoiceLine?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:TaxAmount"),
+                                            CalculationSequenceNumeric = taxSubTotalInvoiceLine?.ChildNodes[0]
+                                                ?.ChildNodes?.GetValue("cbc:CalculationSequenceNumeric"),
+                                            Percent = taxSubTotalInvoiceLine?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:Percent"),
                                             TaxCategory = new TaxCategory
                                             {
-                                                TaxExemptionReasonCode = taxCategoryInvoiceLine?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxExemptionReasonCode"),
-                                                TaxExemptionReason = taxCategoryInvoiceLine?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxExemptionReason"),
+                                                TaxExemptionReasonCode = taxCategoryInvoiceLine?.ChildNodes[0]
+                                                    ?.ChildNodes?.GetValue("cbc:TaxExemptionReasonCode"),
+                                                TaxExemptionReason = taxCategoryInvoiceLine?.ChildNodes[0]?.ChildNodes
+                                                    ?.GetValue("cbc:TaxExemptionReason"),
                                                 TaxScheme = new TaxScheme
                                                 {
-                                                    Name = taxSchemeInvoiceLine?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
-                                                    TaxTypeCode = taxSchemeInvoiceLine?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxTypeCode")
+                                                    Name = taxSchemeInvoiceLine?.ChildNodes[0]?.ChildNodes
+                                                        ?.GetValue("cbc:Name"),
+                                                    TaxTypeCode = taxSchemeInvoiceLine?.ChildNodes[0]?.ChildNodes
+                                                        ?.GetValue("cbc:TaxTypeCode")
                                                 }
                                             }
                                         }
@@ -866,11 +960,13 @@ namespace Business.Concrete
                                         Name = item?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
                                         SellersItemIdentification = new SellersItemIdentification
                                         {
-                                            ID = sellersItemIdentification?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
+                                            ID = sellersItemIdentification?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:ID"),
                                         },
                                         OriginCountry = new OriginCountry
                                         {
-                                            IdentificationCode = originCountry?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:IdentificationCode"),
+                                            IdentificationCode = originCountry?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:IdentificationCode"),
                                             Name = originCountry?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
                                         },
                                         CommodityClassifications = new List<CommodityClassification> { }
@@ -882,7 +978,7 @@ namespace Business.Concrete
                                 };
                                 if (notes != null)
                                 {
-                                    for (int k = 0; k < notes.Count; j++)
+                                    for (int k = 0; k < notes.Count; k++)
                                     {
                                         var note = XmlStringToXmlNode2(notes[k]);
                                         //var strValue = node == null ? "" : node.ChildNodes[0]?.ChildNodes[0]?.Value;
@@ -891,21 +987,25 @@ namespace Business.Concrete
                                         {
                                             invoiceLine.Notes.Add(note?.ChildNodes[0]?.ChildNodes[0]?.Value);
                                         }
-
                                     }
                                 }
+
                                 if (commodityClassificationStr != null)
                                 {
-                                    for (int k = 0; k < commodityClassificationStr.Count; j++)
+                                    for (int k = 0; k < commodityClassificationStr.Count; k++)
                                     {
-                                        var commodityClassification = XmlStringToXmlNode2(commodityClassificationStr[k]);
+                                        var commodityClassification =
+                                            XmlStringToXmlNode2(commodityClassificationStr[k]);
                                         CommodityClassification model = new CommodityClassification
                                         {
-                                            ItemClassificationCode = commodityClassification?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ItemClassificationCode")
+                                            ItemClassificationCode = commodityClassification?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:ItemClassificationCode")
                                         };
                                         invoiceLine.Item.CommodityClassifications.Add(model);
                                     }
                                 }
+
+                                invoice.CONTENT.InvoiceLines.Add(invoiceLine);
                             }
                         }
 
@@ -925,7 +1025,6 @@ namespace Business.Concrete
 
                     throw new Exception(Messages.AnErrorOccurred + ex.Message);
                 }
-
             }
             catch (Exception ex)
             {
@@ -933,9 +1032,9 @@ namespace Business.Concrete
             }
             //throw new NotImplementedException();
         }
+
         public IDataResult<MarkInvoiceResponse> MarkInvoice(string sessionId, List<InvoiceMark> invoices)
         {
-
             try
             {
                 var res = _iInvoiceDal.GetMarkInvoice(sessionId, invoices);
@@ -963,7 +1062,8 @@ namespace Business.Concrete
                 {
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EFaturaOIB", xml, "POST", header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EFaturaOIB", xml, "POST",
+                        header);
 
                     if (res_ == null)
                     {
@@ -983,7 +1083,6 @@ namespace Business.Concrete
                     }
 
 
-
                     markInvoiceResponse = new MarkInvoiceResponse
                     {
                         REQUEST_RETURN = new REQUEST_RETURN
@@ -991,7 +1090,6 @@ namespace Business.Concrete
                             INTL_TXN_ID = node.ChildNodes.GetValue("INTL_TXN_ID"),
                             RETURN_CODE = node.ChildNodes.GetValue("RETURN_CODE")
                         }
-
                     };
 
                     return new SuccessDataResult<MarkInvoiceResponse>(markInvoiceResponse);
@@ -1007,14 +1105,15 @@ namespace Business.Concrete
 
                     throw new Exception(Messages.AnErrorOccurred + ex.Message);
                 }
-
             }
             catch (Exception ex)
             {
                 return new ErrorDataResult<MarkInvoiceResponse>(null, ex.Message);
             }
         }
-        public IDataResult<SendInvoiceResponseWithServerSignResponse> SendInvoiceResponseWithServerSign(string sessionId, INVOICE invoice, bool status)
+
+        public IDataResult<SendInvoiceResponseWithServerSignResponse> SendInvoiceResponseWithServerSign(
+            string sessionId, INVOICE invoice, bool status)
         {
             try
             {
@@ -1030,7 +1129,8 @@ namespace Business.Concrete
                     throw new Exception(Messages.NotFoundDataByTableRowID());
                 }
 
-                ITemplate<RSendInvoiceResponseWithServerSignRequest> template = new SendInvoiceResponseWithServerSignRequestXML();
+                ITemplate<RSendInvoiceResponseWithServerSignRequest> template =
+                    new SendInvoiceResponseWithServerSignRequestXML();
 
                 var xmlXElement = template.Run(res.Data);
 
@@ -1044,7 +1144,8 @@ namespace Business.Concrete
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
 
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EFaturaOIB", xml, "POST", header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EFaturaOIB", xml, "POST",
+                        header);
 
                     if (res_ == null)
                     {
@@ -1072,19 +1173,20 @@ namespace Business.Concrete
                         ERROR_SHORT_DES = node.ChildNodes.GetValue("ERROR_SHORT_DES"),
                         ERROR_LONG_DES = node.ChildNodes.GetValue("ERROR_LONG_DES")
                     };
-                    return new SuccessDataResult<SendInvoiceResponseWithServerSignResponse>(sendInvoiceResponseWithServerSignResponse);
+                    return new SuccessDataResult<SendInvoiceResponseWithServerSignResponse>(
+                        sendInvoiceResponseWithServerSignResponse);
                 }
                 catch (Exception ex)
                 {
                     throw new Exception(Messages.AnErrorOccurred + ex.Message);
                 }
-
             }
             catch (Exception ex)
             {
                 return new SuccessDataResult<SendInvoiceResponseWithServerSignResponse>(null, ex.Message);
             }
         }
+
         public IDataResult<GetInvoiceStatusResponse> GetInvoiceStatus(string sessionId, INVOICE invoice)
         {
             try
@@ -1107,7 +1209,8 @@ namespace Business.Concrete
 
                 var xml = xmlXElement.ObjectToSoapXml();
 
-                GetInvoiceStatusResponse getInvoiceStatusResponse; ;
+                GetInvoiceStatusResponse getInvoiceStatusResponse;
+                ;
                 IDataResult<XmlDocument> res_ = null;
 
                 try
@@ -1115,7 +1218,8 @@ namespace Business.Concrete
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
 
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EFaturaOIB", xml, "POST", header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EFaturaOIB", xml, "POST",
+                        header);
 
                     if (res_ == null)
                     {
@@ -1149,17 +1253,15 @@ namespace Business.Concrete
                 }
                 catch (Exception ex)
                 {
-
                     throw new Exception(Messages.AnErrorOccurred + ex.Message);
                 }
-
             }
             catch (Exception ex)
             {
-
                 return new SuccessDataResult<GetInvoiceStatusResponse>(null, ex.Message);
             }
         }
+
         public IDataResult<GetGibUserListResponse> GetGibUserList(string sessionId)
         {
             try
@@ -1182,7 +1284,8 @@ namespace Business.Concrete
 
                 var xml = xmlXElement.ObjectToSoapXml();
 
-                GetGibUserListResponse getGibUserListResponse; ;
+                GetGibUserListResponse getGibUserListResponse;
+                ;
                 IDataResult<XmlDocument> res_ = null;
 
                 try
@@ -1190,7 +1293,8 @@ namespace Business.Concrete
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
 
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/AuthenticationWS", xml, "POST", header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/AuthenticationWS", xml, "POST",
+                        header);
 
                     if (res_ == null)
                     {
@@ -1223,14 +1327,11 @@ namespace Business.Concrete
                 }
                 catch (Exception ex)
                 {
-
                     throw new Exception(Messages.AnErrorOccurred + ex.Message);
                 }
-
             }
             catch (Exception ex)
             {
-
                 return new SuccessDataResult<GetGibUserListResponse>(null, ex.Message);
             }
         }
@@ -1238,6 +1339,7 @@ namespace Business.Concrete
         #endregion
 
         #region E-ARCHIVE
+
         public IDataResult<WriteToArchieveExtendedResponse> WriteToArchieveExtended(string sessionId)
         {
             try
@@ -1260,16 +1362,17 @@ namespace Business.Concrete
 
                 var xml = xmlXElement.ObjectToSoapXml();
 
-                WriteToArchieveExtendedResponse rWriteToArchieveExtendedResponse; ;
+                WriteToArchieveExtendedResponse rWriteToArchieveExtendedResponse;
+                ;
                 IDataResult<XmlDocument> res_ = null;
 
                 try
                 {
-
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
 
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EIArchiveWS/EFaturaArchive", xml, "POST", header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EIArchiveWS/EFaturaArchive",
+                        xml, "POST", header);
 
                     if (res_ == null)
                     {
@@ -1315,16 +1418,15 @@ namespace Business.Concrete
                 }
                 catch (Exception ex)
                 {
-
                     throw new Exception(Messages.AnErrorOccurred + ex.Message);
                 }
             }
             catch (Exception ex)
             {
-
                 return new SuccessDataResult<WriteToArchieveExtendedResponse>(null, ex.Message);
             }
         }
+
         public IDataResult<ReadFromArchiveResponse> ReadFromArchive(string sessionId, INVOICE Invoice)
         {
             try
@@ -1347,7 +1449,8 @@ namespace Business.Concrete
 
                 var xml = xmlXElement.ObjectToSoapXml();
 
-                ReadFromArchiveResponse readFromArchiveResponse; ;
+                ReadFromArchiveResponse readFromArchiveResponse;
+                ;
                 IDataResult<XmlDocument> res_ = null;
 
                 try
@@ -1355,7 +1458,8 @@ namespace Business.Concrete
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
 
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EIArchiveWS/EFaturaArchive", xml, "POST", header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EIArchiveWS/EFaturaArchive",
+                        xml, "POST", header);
 
                     if (res_ == null)
                     {
@@ -1384,7 +1488,8 @@ namespace Business.Concrete
                     var DespatchDocumentReferenceStr = invoice.ChildNodes[1]?.GetClass("cac:DespatchDocumentReference");
                     var DespatchDocumentReference = XmlStringToXmlNode2(DespatchDocumentReferenceStr);
 
-                    var AdditionalDocumentReferences = invoice.ChildNodes[1]?.GetClassess("cac:AdditionalDocumentReference");
+                    var AdditionalDocumentReferences =
+                        invoice.ChildNodes[1]?.GetClasses("cac:AdditionalDocumentReference");
 
                     var SignatureStr = invoice.ChildNodes[1]?.GetClass("cac:Signature");
                     var Signature = XmlStringToXmlNode2(SignatureStr);
@@ -1392,7 +1497,8 @@ namespace Business.Concrete
                     var SignatoryPartyStr = Signature.ChildNodes[0]?.GetClass("cac:SignatoryParty");
                     var SignatoryParty = XmlStringToXmlNode2(SignatoryPartyStr);
 
-                    var SignatoryPartyIdentificationStr = SignatoryParty?.ChildNodes[0]?.GetClass("cac:PartyIdentification");
+                    var SignatoryPartyIdentificationStr =
+                        SignatoryParty?.ChildNodes[0]?.GetClass("cac:PartyIdentification");
                     var SignatoryPartyIdentification = XmlStringToXmlNode2(SignatoryPartyIdentificationStr);
 
                     var SignatoryPartyPostalAddressStr = SignatoryParty?.ChildNodes[0]?.GetClass("cac:PostalAddress");
@@ -1401,10 +1507,12 @@ namespace Business.Concrete
                     var SignatoryPartyCountryStr = SignatoryPartyPostalAddress?.ChildNodes[0]?.GetClass("cac:Country");
                     var SignatoryPartyCountry = XmlStringToXmlNode2(SignatoryPartyCountryStr);
 
-                    var DigitalSignatureAttachmentStr = Signature.ChildNodes[0]?.GetClass("cac:DigitalSignatureAttachment");
+                    var DigitalSignatureAttachmentStr =
+                        Signature.ChildNodes[0]?.GetClass("cac:DigitalSignatureAttachment");
                     var DigitalSignatureAttachment = XmlStringToXmlNode2(DigitalSignatureAttachmentStr);
 
-                    var ExternalReferenceStr = DigitalSignatureAttachment.ChildNodes[0]?.GetClass("cac:ExternalReference");
+                    var ExternalReferenceStr =
+                        DigitalSignatureAttachment.ChildNodes[0]?.GetClass("cac:ExternalReference");
                     var ExternalReference = XmlStringToXmlNode2(ExternalReferenceStr);
 
                     var AccountingSupplierPartyStr = invoice.ChildNodes[1]?.GetClass("cac:AccountingSupplierParty");
@@ -1413,7 +1521,8 @@ namespace Business.Concrete
                     var SupplierPartyStr = AccountingSupplierParty.ChildNodes[0]?.GetClass("cac:Party");
                     var SupplierParty = XmlStringToXmlNode2(SupplierPartyStr);
 
-                    var SupplierPartyIdentificationLst = SupplierParty.ChildNodes[0].GetClassess("cac:PartyIdentification");
+                    var SupplierPartyIdentificationLst =
+                        SupplierParty.ChildNodes[0].GetClasses("cac:PartyIdentification");
 
                     var SupplierPartyNameStr = SupplierParty.ChildNodes[0]?.GetClass("cac:PartyName");
                     var SupplierPartyName = XmlStringToXmlNode2(SupplierPartyNameStr);
@@ -1439,7 +1548,8 @@ namespace Business.Concrete
                     var CustomerPartyStr = AccountingCustomerParty.ChildNodes[0]?.GetClass("cac:Party");
                     var CustomerParty = XmlStringToXmlNode2(CustomerPartyStr);
 
-                    var CustomerPartyIdentificationLst = CustomerParty.ChildNodes[0].GetClassess("cac:PartyIdentification");
+                    var CustomerPartyIdentificationLst =
+                        CustomerParty.ChildNodes[0].GetClasses("cac:PartyIdentification");
 
                     var CustomerPartyNameStr = CustomerParty.ChildNodes[0].GetClass("cac:PartyName");
                     var CustomerPartyName = XmlStringToXmlNode2(CustomerPartyNameStr);
@@ -1456,7 +1566,7 @@ namespace Business.Concrete
                     var CustomerTaxShemeStr = CustomerPartyTaxSheme.ChildNodes[0]?.GetClass("cac:TaxScheme");
                     var CustomerTaxSheme = XmlStringToXmlNode2(CustomerTaxShemeStr);
 
-                    var AllowanceChargeLst = invoice.ChildNodes[1].GetClassess("cac:AllowanceCharge");
+                    var AllowanceChargeLst = invoice.ChildNodes[1].GetClasses("cac:AllowanceCharge");
 
                     var PricingExchangeRateStr = invoice.ChildNodes[1].GetClass("cac:PricingExchangeRate");
                     var PricingExchangeRate = XmlStringToXmlNode2(PricingExchangeRateStr);
@@ -1516,29 +1626,46 @@ namespace Business.Concrete
                                 IssueDate = invoice.ChildNodes[1]?.ChildNodes?.GetValue("cbc:IssueDate"),
                                 IssueTime = invoice.ChildNodes[1]?.ChildNodes?.GetValue("cbc:IssueTime"),
                                 InvoiceTypeCode = invoice.ChildNodes[1]?.ChildNodes?.GetValue("cbc:InvoiceTypeCode"),
-                                DocumentCurrencyCode = invoice.ChildNodes[1]?.ChildNodes?.GetValue("cbc:DocumentCurrencyCode"),
+                                DocumentCurrencyCode = invoice.ChildNodes[1]?.ChildNodes
+                                    ?.GetValue("cbc:DocumentCurrencyCode"),
                                 LineCountNumeric = invoice.ChildNodes[1]?.ChildNodes?.GetValue("cbc:LineCountNumeric"),
                                 DespatchDocumentReference = new DespatchDocumentReference
                                 {
                                     ID = DespatchDocumentReference.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
-                                    IssueDate = DespatchDocumentReference.ChildNodes[0]?.ChildNodes?.GetValue("cbc:IssueDate")
+                                    IssueDate = DespatchDocumentReference.ChildNodes[0]?.ChildNodes
+                                        ?.GetValue("cbc:IssueDate")
                                 },
                                 Signature = new Signature
                                 {
                                     ID = Signature.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
                                     SignatoryParty = new SignatoryParty
                                     {
-                                        PartyIdentification = new PartyIdentification { ID = SignatoryPartyIdentification.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID") },
+                                        PartyIdentification = new PartyIdentification
+                                        {
+                                            ID = SignatoryPartyIdentification.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:ID")
+                                        },
                                         PostalAddress = new PostalAddress
                                         {
-                                            StreetName = SignatoryPartyPostalAddress.ChildNodes[0]?.ChildNodes?.GetValue("cbc:StreetName"),
-                                            BuildingName = SignatoryPartyPostalAddress.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingName"),
-                                            BuildingNumber = SignatoryPartyPostalAddress.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingNumber"),
-                                            CitySubdivisionName = SignatoryPartyPostalAddress.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CitySubdivisionName"),
-                                            CityName = SignatoryPartyPostalAddress.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CityName"),
-                                            PostalZone = SignatoryPartyPostalAddress.ChildNodes[0]?.ChildNodes?.GetValue("cbc:PostalZone"),
-                                            Region = SignatoryPartyPostalAddress.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Region"),
-                                            Country = new Country { Name = SignatoryPartyCountry.ChildNodes[0].ChildNodes?.GetValue("cbc:Name") }
+                                            StreetName = SignatoryPartyPostalAddress.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:StreetName"),
+                                            BuildingName = SignatoryPartyPostalAddress.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:BuildingName"),
+                                            BuildingNumber = SignatoryPartyPostalAddress.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:BuildingNumber"),
+                                            CitySubdivisionName = SignatoryPartyPostalAddress.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:CitySubdivisionName"),
+                                            CityName = SignatoryPartyPostalAddress.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:CityName"),
+                                            PostalZone = SignatoryPartyPostalAddress.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:PostalZone"),
+                                            Region = SignatoryPartyPostalAddress.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:Region"),
+                                            Country = new Country
+                                            {
+                                                Name = SignatoryPartyCountry.ChildNodes[0].ChildNodes
+                                                    ?.GetValue("cbc:Name")
+                                            }
                                         }
                                     },
                                     DigitalSignatureAttachment = new DigitalSignatureAttachment
@@ -1553,20 +1680,28 @@ namespace Business.Concrete
                                 {
                                     Party = new Party
                                     {
-                                        WebsiteURI = SupplierParty?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:WebsiteURI"),
+                                        WebsiteURI = SupplierParty?.ChildNodes[0]?.ChildNodes
+                                            ?.GetValue("cbc:WebsiteURI"),
                                         PartyName = new PartyName
                                         {
                                             Name = SupplierPartyName?.ChildNodes[0]?.ChildNodes.GetValue("cbc:Name")
                                         },
                                         PostalAddress = new PostalAddress
                                         {
-                                            StreetName = SupplierPostalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:StreetName"),
-                                            BuildingName = SupplierPostalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingName"),
-                                            BuildingNumber = SupplierPostalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingNumber"),
-                                            CitySubdivisionName = SupplierPostalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CitySubdivisionName"),
-                                            CityName = SupplierPostalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CityName"),
-                                            PostalZone = SupplierPostalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:PostalZone"),
-                                            Region = SupplierPostalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Region"),
+                                            StreetName = SupplierPostalAddress?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:StreetName"),
+                                            BuildingName = SupplierPostalAddress?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:BuildingName"),
+                                            BuildingNumber = SupplierPostalAddress?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:BuildingNumber"),
+                                            CitySubdivisionName = SupplierPostalAddress?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:CitySubdivisionName"),
+                                            CityName = SupplierPostalAddress?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:CityName"),
+                                            PostalZone = SupplierPostalAddress?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:PostalZone"),
+                                            Region = SupplierPostalAddress?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:Region"),
                                             Country = new Country
                                             {
                                                 Name = SupplierCountry?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name")
@@ -1576,14 +1711,18 @@ namespace Business.Concrete
                                         {
                                             TaxScheme = new TaxScheme
                                             {
-                                                Name = SupplierTaxScheme?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
+                                                Name = SupplierTaxScheme?.ChildNodes[0]?.ChildNodes
+                                                    ?.GetValue("cbc:Name"),
                                             }
                                         },
                                         Contact = new ContactInv
                                         {
-                                            Telephone = SupplierContact?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Telephone"),
-                                            ElectronicMail = SupplierContact?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ElectronicMail"),
-                                            Telefax = SupplierContact?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Telefax"),
+                                            Telephone = SupplierContact?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:Telephone"),
+                                            ElectronicMail = SupplierContact?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:ElectronicMail"),
+                                            Telefax = SupplierContact?.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:Telefax"),
                                             Note = SupplierContact?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Note"),
                                             Name = SupplierContact?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
                                         }
@@ -1593,20 +1732,30 @@ namespace Business.Concrete
                                 {
                                     Party = new Party
                                     {
-                                        PartyName = new PartyName { Name = CustomerPartyName.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name") },
+                                        PartyName = new PartyName
+                                        {
+                                            Name = CustomerPartyName.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name")
+                                        },
                                         PostalAddress = new PostalAddress
                                         {
-                                            StreetName = CustomerPostalAddress.ChildNodes[0]?.ChildNodes?.GetValue("cbc:StreetName"),
-                                            BuildingName = CustomerPostalAddress.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingName"),
-                                            CitySubdivisionName = CustomerPostalAddress.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CitySubdivisionName"),
-                                            CityName = CustomerPostalAddress.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CityName"),
-                                            PostalZone = CustomerPostalAddress.ChildNodes[0]?.ChildNodes?.GetValue("cbc:PostalZone"),
-                                            Region = CustomerPostalAddress.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Region"),
+                                            StreetName = CustomerPostalAddress.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:StreetName"),
+                                            BuildingName = CustomerPostalAddress.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:BuildingName"),
+                                            CitySubdivisionName = CustomerPostalAddress.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:CitySubdivisionName"),
+                                            CityName = CustomerPostalAddress.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:CityName"),
+                                            PostalZone = CustomerPostalAddress.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:PostalZone"),
+                                            Region = CustomerPostalAddress.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:Region"),
                                             Country = new Country
                                             {
                                                 Name = CustomerCountry.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name")
                                             },
-                                            BuildingNumber = CustomerPostalAddress.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingNumber"),
+                                            BuildingNumber = CustomerPostalAddress.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:BuildingNumber"),
                                         },
                                         PartyTaxSheme = new PartyTaxScheme
                                         {
@@ -1619,17 +1768,21 @@ namespace Business.Concrete
                                 },
                                 PricingExchangeRate = new PricingExchangeRate
                                 {
-                                    CalculationRate = PricingExchangeRate.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CalculationRate"),
-                                    SourceCurrencyCode = PricingExchangeRate.ChildNodes[0].ChildNodes?.GetValue("cbc:SourceCurrencyCode"),
+                                    CalculationRate = PricingExchangeRate.ChildNodes[0]?.ChildNodes
+                                        ?.GetValue("cbc:CalculationRate"),
+                                    SourceCurrencyCode = PricingExchangeRate.ChildNodes[0].ChildNodes
+                                        ?.GetValue("cbc:SourceCurrencyCode"),
                                     Date = PricingExchangeRate.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Date"),
-                                    TargetCurrencyCode = PricingExchangeRate.ChildNodes[0]?.ChildNodes.GetValue("cbc:TargetCurrencyCode")
+                                    TargetCurrencyCode = PricingExchangeRate.ChildNodes[0]?.ChildNodes
+                                        .GetValue("cbc:TargetCurrencyCode")
                                 },
                                 TaxTotal = new TaxTotal
                                 {
                                     TaxAmount = TaxTotal.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxAmount"),
                                     TaxSubtotal = new TaxSubtotal
                                     {
-                                        TaxableAmount = TaxSubtotal.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxableAmount"),
+                                        TaxableAmount = TaxSubtotal.ChildNodes[0]?.ChildNodes
+                                            ?.GetValue("cbc:TaxableAmount"),
                                         TaxAmount = TaxSubtotal.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxAmount"),
                                         Percent = TaxSubtotal.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Percent"),
                                         TaxCategory = new TaxCategory
@@ -1637,38 +1790,51 @@ namespace Business.Concrete
                                             TaxScheme = new TaxScheme
                                             {
                                                 Name = TaxScheme.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
-                                                TaxTypeCode = TaxScheme.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxTypeCode"),
+                                                TaxTypeCode = TaxScheme.ChildNodes[0]?.ChildNodes
+                                                    ?.GetValue("cbc:TaxTypeCode"),
                                             }
                                         }
                                     }
                                 },
                                 LegalMonetaryTotal = new LegalMonetaryTotal
                                 {
-                                    LineExtensionAmount = LegalMonetaryTotal.ChildNodes[0]?.ChildNodes?.GetValue("cbc:LineExtensionAmount"),
-                                    TaxExclusiveAmount = LegalMonetaryTotal.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxExclusiveAmount"),
-                                    TaxInclusiveAmount = LegalMonetaryTotal.ChildNodes[0]?.ChildNodes?.GetValue("cbc:AllowanceTotalAmount"),
-                                    AllowanceTotalAmount = LegalMonetaryTotal.ChildNodes[0]?.ChildNodes?.GetValue("cbc:LineExtensionAmount"),
-                                    PayableAmount = LegalMonetaryTotal.ChildNodes[0]?.ChildNodes?.GetValue("cbc:PayableAmount"),
-                                    ChargeTotalAmount = LegalMonetaryTotal.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ChargeTotalAmount")
+                                    LineExtensionAmount = LegalMonetaryTotal.ChildNodes[0]?.ChildNodes
+                                        ?.GetValue("cbc:LineExtensionAmount"),
+                                    TaxExclusiveAmount = LegalMonetaryTotal.ChildNodes[0]?.ChildNodes
+                                        ?.GetValue("cbc:TaxExclusiveAmount"),
+                                    TaxInclusiveAmount = LegalMonetaryTotal.ChildNodes[0]?.ChildNodes
+                                        ?.GetValue("cbc:AllowanceTotalAmount"),
+                                    AllowanceTotalAmount = LegalMonetaryTotal.ChildNodes[0]?.ChildNodes
+                                        ?.GetValue("cbc:LineExtensionAmount"),
+                                    PayableAmount = LegalMonetaryTotal.ChildNodes[0]?.ChildNodes
+                                        ?.GetValue("cbc:PayableAmount"),
+                                    ChargeTotalAmount = LegalMonetaryTotal.ChildNodes[0]?.ChildNodes
+                                        ?.GetValue("cbc:ChargeTotalAmount")
                                 },
                                 InvoiceLine = new InvoiceLine
                                 {
                                     ID = InvoiceLine.ChildNodes[0]?.ChildNodes.GetValue("cbc:ID"),
-                                    InvoicedQuantity = InvoiceLine.ChildNodes[0]?.ChildNodes.GetValue("cbc:InvoicedQuantity"),
-                                    LineExtensionAmount = InvoiceLine.ChildNodes[0]?.ChildNodes.GetValue("cbc:LineExtensionAmount"),
+                                    InvoicedQuantity = InvoiceLine.ChildNodes[0]?.ChildNodes
+                                        .GetValue("cbc:InvoicedQuantity"),
+                                    LineExtensionAmount = InvoiceLine.ChildNodes[0]?.ChildNodes
+                                        .GetValue("cbc:LineExtensionAmount"),
                                     TaxTotal = new TaxTotal
                                     {
                                         TaxAmount = InvoTaxTotal.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxAmount"),
                                         TaxSubtotal = new TaxSubtotal
                                         {
-                                            TaxableAmount = InvoTaxSubtotal.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxableAmount"),
-                                            TaxAmount = InvoTaxSubtotal.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxAmount"),
-                                            Percent = InvoTaxSubtotal.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Percent"),
+                                            TaxableAmount = InvoTaxSubtotal.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:TaxableAmount"),
+                                            TaxAmount = InvoTaxSubtotal.ChildNodes[0]?.ChildNodes
+                                                ?.GetValue("cbc:TaxAmount"),
+                                            Percent =
+                                                InvoTaxSubtotal.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Percent"),
                                             TaxCategory = new TaxCategory
                                             {
                                                 TaxScheme = new TaxScheme
                                                 {
-                                                    TaxTypeCode = InvoTaxScheme.ChildNodes[0]?.ChildNodes?.GetValue("cbc:TaxTypeCode")
+                                                    TaxTypeCode = InvoTaxScheme.ChildNodes[0]?.ChildNodes
+                                                        ?.GetValue("cbc:TaxTypeCode")
                                                 }
                                             }
                                         }
@@ -1692,7 +1858,8 @@ namespace Business.Concrete
                         },
                     };
 
-                    readFromArchiveResponse.Invoice.CONTENT.AdditionalDocumentReferences = new List<AdditionalDocumentReference>();
+                    readFromArchiveResponse.Invoice.CONTENT.AdditionalDocumentReferences =
+                        new List<AdditionalDocumentReference>();
 
                     for (int i = 0; i < AdditionalDocumentReferences.Count; i++)
                     {
@@ -1707,13 +1874,16 @@ namespace Business.Concrete
                             DocumentType = AdditionalDocument?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:DocumentType"),
                             Attachment = new Attachment
                             {
-                                EmbeddedDocumentBinaryObject = Attachment?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:EmbeddedDocumentBinaryObject")
+                                EmbeddedDocumentBinaryObject = Attachment?.ChildNodes[0]?.ChildNodes
+                                    ?.GetValue("cbc:EmbeddedDocumentBinaryObject")
                             },
                         };
-                        readFromArchiveResponse.Invoice.CONTENT.AdditionalDocumentReferences.Add(AdditionalDocumentReference);
+                        readFromArchiveResponse.Invoice.CONTENT.AdditionalDocumentReferences.Add(
+                            AdditionalDocumentReference);
                     }
 
-                    readFromArchiveResponse.Invoice.CONTENT.AccountingSupplierParty.Party.PartyIdentifications = new List<PartyIdentification>();
+                    readFromArchiveResponse.Invoice.CONTENT.AccountingSupplierParty.Party.PartyIdentifications =
+                        new List<PartyIdentification>();
 
                     for (int i = 0; i < SupplierPartyIdentificationLst.Count; i++)
                     {
@@ -1722,11 +1892,13 @@ namespace Business.Concrete
                         {
                             ID = SupplierPartyIdentification?.ChildNodes[0].ChildNodes.GetValue("cbc:ID")
                         };
-                        readFromArchiveResponse.Invoice.CONTENT.AccountingSupplierParty.Party.PartyIdentifications.Add(PartyIdentification);
+                        readFromArchiveResponse.Invoice.CONTENT.AccountingSupplierParty.Party.PartyIdentifications.Add(
+                            PartyIdentification);
                     }
 
 
-                    readFromArchiveResponse.Invoice.CONTENT.AccountingCustomerParty.Party.PartyIdentifications = new List<PartyIdentification>();
+                    readFromArchiveResponse.Invoice.CONTENT.AccountingCustomerParty.Party.PartyIdentifications =
+                        new List<PartyIdentification>();
                     for (int i = 0; i < CustomerPartyIdentificationLst.Count; i++)
                     {
                         var CustomerPartyIdentification = XmlStringToXmlNode2(CustomerPartyIdentificationLst[i]);
@@ -1734,7 +1906,8 @@ namespace Business.Concrete
                         {
                             ID = CustomerPartyIdentification?.ChildNodes[0].ChildNodes.GetValue("cbc:ID")
                         };
-                        readFromArchiveResponse.Invoice.CONTENT.AccountingCustomerParty.Party.PartyIdentifications.Add(PartyIdentification);
+                        readFromArchiveResponse.Invoice.CONTENT.AccountingCustomerParty.Party.PartyIdentifications.Add(
+                            PartyIdentification);
                     }
 
                     readFromArchiveResponse.Invoice.CONTENT.AllowanceCharges = new List<AllowanceCharge>();
@@ -1744,12 +1917,17 @@ namespace Business.Concrete
                         var AllowanceChargeNode = XmlStringToXmlNode2(AllowanceChargeLst[i]);
                         var AllowancaCharge = new AllowanceCharge
                         {
-                            ChargeIndicator = AllowanceChargeNode?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ChargeIndicator"),
+                            ChargeIndicator = AllowanceChargeNode?.ChildNodes[0]?.ChildNodes
+                                ?.GetValue("cbc:ChargeIndicator"),
                             Amount = AllowanceChargeNode?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Amount"),
-                            AllowanceChargeReason = AllowanceChargeNode?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:AllowanceChargeReason"),
-                            BaseAmount = AllowanceChargeNode?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:AllowanceChargeReason"),
-                            MultiplierFactorNumeric = AllowanceChargeNode?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BaseAmount"),
-                            SequenceNumeric = AllowanceChargeNode?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:SequenceNumeric"),
+                            AllowanceChargeReason = AllowanceChargeNode?.ChildNodes[0]?.ChildNodes
+                                ?.GetValue("cbc:AllowanceChargeReason"),
+                            BaseAmount = AllowanceChargeNode?.ChildNodes[0]?.ChildNodes
+                                ?.GetValue("cbc:AllowanceChargeReason"),
+                            MultiplierFactorNumeric = AllowanceChargeNode?.ChildNodes[0]?.ChildNodes
+                                ?.GetValue("cbc:BaseAmount"),
+                            SequenceNumeric = AllowanceChargeNode?.ChildNodes[0]?.ChildNodes
+                                ?.GetValue("cbc:SequenceNumeric"),
                         };
                         readFromArchiveResponse.Invoice.CONTENT.AllowanceCharges.Add(AllowancaCharge);
                     }
@@ -1763,22 +1941,19 @@ namespace Business.Concrete
 
 
                     return new SuccessDataResult<ReadFromArchiveResponse>(readFromArchiveResponse);
-
                 }
 
                 catch (Exception ex)
                 {
-
                     throw new Exception(Messages.AnErrorOccurred + ex.Message);
                 }
-
             }
             catch (Exception ex)
             {
-
                 return new SuccessDataResult<ReadFromArchiveResponse>(null, ex.Message);
             }
         }
+
         public IDataResult<CancelEArchiveInvoiceResponse> CancelEArchiveInvoice(string sessionId, string uuid)
         {
             try
@@ -1809,7 +1984,8 @@ namespace Business.Concrete
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
 
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EIArchiveWS/EFaturaArchive", xml, "POST", header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EIArchiveWS/EFaturaArchive",
+                        xml, "POST", header);
 
                     if (res_.Data == null)
                     {
@@ -1848,17 +2024,15 @@ namespace Business.Concrete
                 }
                 catch (Exception ex)
                 {
-
                     throw new Exception(Messages.AnErrorOccurred + ex.Message);
                 }
             }
             catch (Exception ex)
             {
-
                 return new SuccessDataResult<CancelEArchiveInvoiceResponse>(null, ex.Message);
             }
-
         }
+
         public IDataResult<GetEArchiveInvoiceStatusResponse> EArchiveInvoiceStatus(string sessionId, string uuid)
         {
             try
@@ -1869,6 +2043,7 @@ namespace Business.Concrete
                 {
                     throw new Exception(res.Message);
                 }
+
                 if (res.Data == null)
                 {
                     throw new Exception(Messages.NotFoundDataByTableRowID());
@@ -1885,12 +2060,14 @@ namespace Business.Concrete
                 {
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EIArchiveWS/EFaturaArchive", xml, "POST", header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EIArchiveWS/EFaturaArchive",
+                        xml, "POST", header);
 
                     if (res_.Data == null)
                     {
                         throw new Exception(Messages.NotNull("Response"));
                     }
+
                     if (!res_.Success)
                     {
                         throw new Exception(res_.Message);
@@ -1918,18 +2095,17 @@ namespace Business.Concrete
                 }
                 catch (Exception ex)
                 {
-
                     throw new Exception(Messages.AnErrorOccurred + ex.Message);
                 }
-
             }
             catch (Exception ex)
             {
-
                 return new ErrorDataResult<GetEArchiveInvoiceStatusResponse>(null, ex.Message);
             }
         }
-        public IDataResult<GetEArchiveReportResponse> EArchiveReport(string sessionId, string reportPeriod, string reportStatus = "Y")
+
+        public IDataResult<GetEArchiveReportResponse> EArchiveReport(string sessionId, string reportPeriod,
+            string reportStatus = "Y")
         {
             try
             {
@@ -1939,6 +2115,7 @@ namespace Business.Concrete
                 {
                     throw new Exception(Messages.NotFoundDataByTableRowID());
                 }
+
                 if (!res.Success)
                 {
                     throw new Exception(res.Message);
@@ -1956,12 +2133,14 @@ namespace Business.Concrete
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
 
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EIArchiveWS/EFaturaArchive", xml, "POST", header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EIArchiveWS/EFaturaArchive",
+                        xml, "POST", header);
 
                     if (!res_.Success)
                     {
                         throw new Exception(res_.Message);
                     }
+
                     if (res_.Data == null)
                     {
                         throw new Exception(Messages.NotNull("Response"));
@@ -1994,7 +2173,6 @@ namespace Business.Concrete
                 }
                 catch (Exception ex)
                 {
-
                     throw new Exception(Messages.AnErrorOccurred + ex.Message);
                 }
             }
@@ -2003,6 +2181,7 @@ namespace Business.Concrete
                 return new ErrorDataResult<GetEArchiveReportResponse>(null, ex.Message);
             }
         }
+
         public IDataResult<ReadEArchiveReportResponse> ReadEArchiveReport(string sessionId, string raporNo)
         {
             try
@@ -2013,6 +2192,7 @@ namespace Business.Concrete
                 {
                     throw new Exception(Messages.NotFoundDataByTableRowID());
                 }
+
                 if (!res.Success)
                 {
                     throw new Exception(res.Message);
@@ -2030,12 +2210,14 @@ namespace Business.Concrete
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
 
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EIArchiveWS/EFaturaArchive", xml, "POST", header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EIArchiveWS/EFaturaArchive",
+                        xml, "POST", header);
 
                     if (res_ == null)
                     {
                         throw new Exception(Messages.NotNull("Response"));
                     }
+
                     if (!res_.Success)
                     {
                         throw new Exception(res_.Message);
@@ -2069,7 +2251,8 @@ namespace Business.Concrete
                     var hazirlayanStr = baslik.ChildNodes[0].GetClass("hazirlayan");
                     var hazirlayan = XmlStringToXmlNode2(hazirlayanStr);
 
-                    var serbestMeslekMakbuzIptalStr = nodeZip.ChildNodes[0].ChildNodes[0].GetClass("serbestMeslekMakbuzIptal");
+                    var serbestMeslekMakbuzIptalStr =
+                        nodeZip.ChildNodes[0].ChildNodes[0].GetClass("serbestMeslekMakbuzIptal");
                     var serbestMeslekMakbuzIptal = XmlStringToXmlNode2(serbestMeslekMakbuzIptalStr);
 
 
@@ -2095,16 +2278,19 @@ namespace Business.Concrete
                                     vkn = hazirlayan.ChildNodes[0]?.ChildNodes.GetValue("vkn"),
                                 },
                                 raporNo = baslik.ChildNodes[0]?.ChildNodes.GetValue("raporNo"),
-                                donemBaslangicTarihi = baslik.ChildNodes[0]?.ChildNodes.GetValue("donemBaslangicTarihi"),
+                                donemBaslangicTarihi =
+                                    baslik.ChildNodes[0]?.ChildNodes.GetValue("donemBaslangicTarihi"),
                                 donemBitisTarihi = baslik.ChildNodes[0]?.ChildNodes.GetValue("donemBitisTarihi"),
-                                bolumBaslangicTarihi = baslik.ChildNodes[0]?.ChildNodes.GetValue("bolumBaslangicTarihi"),
+                                bolumBaslangicTarihi =
+                                    baslik.ChildNodes[0]?.ChildNodes.GetValue("bolumBaslangicTarihi"),
                                 bolumBitisTarihi = baslik.ChildNodes[0]?.ChildNodes.GetValue("bolumBitisTarihi"),
                                 bolumNo = baslik.ChildNodes[0]?.ChildNodes.GetValue("bolumNo")
                             },
                             serbestMeslekMakbuzIptal = new serbestMeslekMakbuzIptal
                             {
                                 makbuzNo = serbestMeslekMakbuzIptal.ChildNodes[0]?.ChildNodes.GetValue("makbuzNo"),
-                                iptalTarihi = serbestMeslekMakbuzIptal.ChildNodes[0]?.ChildNodes.GetValue("iptalTarihi"),
+                                iptalTarihi =
+                                    serbestMeslekMakbuzIptal.ChildNodes[0]?.ChildNodes.GetValue("iptalTarihi"),
                                 toplamTutar = serbestMeslekMakbuzIptal.ChildNodes[0]?.ChildNodes.GetValue("toplamTutar")
                             }
                         }
@@ -2114,18 +2300,17 @@ namespace Business.Concrete
                 }
                 catch (Exception ex)
                 {
-
                     throw new Exception(Messages.AnErrorOccurred + ex.Message);
                 }
-
             }
             catch (Exception ex)
             {
-
                 return new ErrorDataResult<ReadEArchiveReportResponse>(null, ex.Message);
             }
         }
-        public IDataResult<EmailEarchiveInvoiceResponse> EmailEarchiveInvoice(string sessionId, string uuId, string eMail)
+
+        public IDataResult<EmailEarchiveInvoiceResponse> EmailEarchiveInvoice(string sessionId, string uuId,
+            string eMail)
         {
             try
             {
@@ -2134,6 +2319,7 @@ namespace Business.Concrete
                 {
                     throw new Exception(Messages.NotFoundDataByTableRowID());
                 }
+
                 if (!res.Success)
                 {
                     throw new Exception(res.Message);
@@ -2151,12 +2337,14 @@ namespace Business.Concrete
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
 
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EIArchiveWS/EFaturaArchive", xml, "POST", header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EIArchiveWS/EFaturaArchive",
+                        xml, "POST", header);
 
                     if (res_ == null)
                     {
                         throw new Exception(Messages.NotNull("Response"));
                     }
+
                     if (!res_.Success)
                     {
                         throw new Exception(res_.Message);
@@ -2180,18 +2368,15 @@ namespace Business.Concrete
                 }
                 catch (Exception ex)
                 {
-
                     throw new Exception(Messages.AnErrorOccurred + ex.Message);
                 }
             }
             catch (Exception ex)
             {
-
                 return new ErrorDataResult<EmailEarchiveInvoiceResponse>(null, ex.Message);
             }
         }
 
         #endregion
-
     }
 }

@@ -62,6 +62,7 @@ namespace Core.Extensions.Utilities.Helpers
             }
             return string.Empty;
         }
+
         public static string GetClass(this XmlNode xml, string Tag)
         {
 
@@ -93,7 +94,7 @@ namespace Core.Extensions.Utilities.Helpers
                     getClassess.Add(xml.ChildNodes[i].InnerXml);
                     continue;
                 }
-                if (!String.IsNullOrEmpty(rgx) && r.IsMatch(xml.ChildNodes[i].Name))
+                if (!string.IsNullOrEmpty(rgx) && r.IsMatch(xml.ChildNodes[i].Name))
                 {
                     getClassess.Add(xml.ChildNodes[i].InnerXml);
 
@@ -103,7 +104,7 @@ namespace Core.Extensions.Utilities.Helpers
 
      
         }
-        public static List<string> GetClassess(this XmlNode xml, string Tag)
+        public static List<string> GetClasses(this XmlNode xml, string Tag)
         {
 
             List<string> getClassess = new List<string>();
