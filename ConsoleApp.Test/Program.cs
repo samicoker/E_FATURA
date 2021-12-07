@@ -57,16 +57,14 @@ namespace ConsoleApp.Test
                     break;
                 }
             }
+           
+            //var res = example.SendInvoice(sesres.Data.SessionId);
+            //var res = example.GetInvoice(sesres.Data.SessionId, 90);
             //var res = example.MarkInvoice(sesres.Data.SessionId, invoices);
             //var res = example.SendInvoiceResponseWithServerSign(sesres.Data.SessionId, invoice, false);
             //var res = example.GetInvoiceStatus(sesres.Data.SessionId, invoice);
             //var res = example.GetGibUserList(sesres.Data.SessionId);
-            //var res = example.SendInvoice(session);
-            var res = example.GetInvoice(sesres.Data.SessionId, 90);
-            //var res = example.MarkInvoice(session, invoices);
-            //var res = example.GetGibUserList(session);
-            //var res = example.GetInvoiceStatus(session, invoice);
-            //var res = example.SendInvoiceResponseWithServerSign(session, invoice, false);
+
 
             //var res = example.WriteToArchieveExtended(sesres.Data.SessionId);
             //var res = example.ReadFromArchive(sesres.Data.SessionId, invoice);
