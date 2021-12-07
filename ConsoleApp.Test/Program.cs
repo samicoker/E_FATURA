@@ -48,7 +48,7 @@ namespace ConsoleApp.Test
 
 
             //var res = example.SendInvoice(session);
-            var res = example.GetInvoice(sesres.Data.SessionId, 20);
+            var res = example.GetInvoice(sesres.Data.SessionId, 90);
             //var res = example.MarkInvoice(session, invoices);
             //var res = example.GetGibUserList(session);
             //var res = example.GetInvoiceStatus(session, invoice);
