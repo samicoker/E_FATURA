@@ -48,7 +48,7 @@ namespace ConsoleApp.Test
 
 
             //var res = example.SendInvoice(sesres.Data.SessionId);
-            var res = example.GetInvoice(sesres.Data.SessionId, 100);
+            //var res = example.GetInvoice(sesres.Data.SessionId, 100);
             //var res = example.MarkInvoice(sesres.Data.SessionId, invoices);
             //var res = example.SendInvoiceResponseWithServerSign(sesres.Data.SessionId, invoice, false);
             //var res = example.GetInvoiceStatus(sesres.Data.SessionId, invoice);
@@ -58,7 +58,7 @@ namespace ConsoleApp.Test
             //var res = example.ReadFromArchive(sesres.Data.SessionId, invoice);
             //var res = example.CancelEArchiveInvoice(sesres.Data.SessionId, invoice.UUID);
             //var res = example.EArchiveInvoiceStatus(sesres.Data.SessionId, invoice.UUID);
-            //var res = example.EArchiveReport(sesres.Data.SessionId, "202110");
+            var res = example.GetEArchiveReport(sesres.Data.SessionId, "202110"); // 202110
             //var res = example.ReadEArchiveReport(sesres.Data.SessionId, "b251241e-3439-4c54-a6dd-ba52a690f8d3");
             //var res = example.EmailEarchiveInvoice(sesres.Data.SessionId, "93C30A9C-12C4-4C75-B97C-51013D2FA45F", "a@a.com.tr");
 

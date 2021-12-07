@@ -323,26 +323,26 @@ namespace Business.Concrete
                         var uBLSignedInfoStr = uBLSignature?.ChildNodes[0]?.GetRegexClass("ds:SignedInfo");
                         var uBLSignedInfo = XmlStringToXmlNode2(uBLSignedInfoStr);
 
-                        var nodeAdditionalDocumentReferenceStr = nodeContent?.ChildNodes[0]?.GetRegexClass("cac:AdditionalDocumentReference");
-                        var nodeAdditionalDocumentReference = XmlStringToXmlNode2(nodeAdditionalDocumentReferenceStr);
+                        //var nodeAdditionalDocumentReferenceStr = nodeContent?.ChildNodes[0]?.GetRegexClass("cac:AdditionalDocumentReference");
+                        //var nodeAdditionalDocumentReference = XmlStringToXmlNode2(nodeAdditionalDocumentReferenceStr);
 
-                        var signatureStr = nodeContent?.ChildNodes[0]?.GetRegexClass("cac:Signature");
-                        var signature = XmlStringToXmlNode2(signatureStr);
+                        //var signatureStr = nodeContent?.ChildNodes[0]?.GetRegexClass("cac:Signature");
+                        //var signature = XmlStringToXmlNode2(signatureStr);
 
-                        var signatoryParyStr = signature?.ChildNodes[0]?.GetRegexClass("cac:SignatoryParty");
-                        var signatoryParty = XmlStringToXmlNode2(signatoryParyStr);
+                        //var signatoryParyStr = signature?.ChildNodes[0]?.GetRegexClass("cac:SignatoryParty");
+                        //var signatoryParty = XmlStringToXmlNode2(signatoryParyStr);
 
-                        var paryIdentificationStr = signatoryParty?.ChildNodes[0]?.GetRegexClass("cac:PartyIdentification");
-                        var partyIdentification = XmlStringToXmlNode2(paryIdentificationStr);
+                        //var paryIdentificationStr = signatoryParty?.ChildNodes[0]?.GetRegexClass("cac:PartyIdentification");
+                        //var partyIdentification = XmlStringToXmlNode2(paryIdentificationStr);
 
-                        var postalAddressStr = signatoryParty?.ChildNodes[0]?.GetRegexClass("cac:PostalAddress");
-                        var postalAddress = XmlStringToXmlNode2(postalAddressStr);
+                        //var postalAddressStr = signatoryParty?.ChildNodes[0]?.GetRegexClass("cac:PostalAddress");
+                        //var postalAddress = XmlStringToXmlNode2(postalAddressStr);
 
-                        var countryStr = postalAddress?.ChildNodes[0]?.GetRegexClass("cac:Country");
-                        var country = XmlStringToXmlNode2(countryStr);
+                        //var countryStr = postalAddress?.ChildNodes[0]?.GetRegexClass("cac:Country");
+                        //var country = XmlStringToXmlNode2(countryStr);
 
-                        var partyTaxSchemeStr = signatoryParty?.ChildNodes[0]?.GetRegexClass("cac:PartyTaxScheme");
-                        var partyTaxScheme = XmlStringToXmlNode2(partyTaxSchemeStr);
+                        //var partyTaxSchemeStr = signatoryParty?.ChildNodes[0]?.GetRegexClass("cac:PartyTaxScheme");
+                        //var partyTaxScheme = XmlStringToXmlNode2(partyTaxSchemeStr);
 
                         var accountingSupplierPartyStr = nodeContent?.ChildNodes[0]?.GetRegexClass("cac:AccountingSupplierParty");
                         var accountingSupplierParty = XmlStringToXmlNode2(accountingSupplierPartyStr);
@@ -368,29 +368,29 @@ namespace Business.Concrete
                         var contactAccountingStr = partyAccounting?.ChildNodes[0]?.GetRegexClass("cac:Contact");
                         var contactAccounting = XmlStringToXmlNode2(contactAccountingStr);
 
-                        var accountingCustomerPartyStr = nodeContent.ChildNodes[0]?.GetRegexClass("cac:AccountingCustomerParty");
-                        var accountingCustomerParty = XmlStringToXmlNode2(accountingCustomerPartyStr);
+                        //var accountingCustomerPartyStr = nodeContent.ChildNodes[0]?.GetRegexClass("cac:AccountingCustomerParty");
+                        //var accountingCustomerParty = XmlStringToXmlNode2(accountingCustomerPartyStr);
 
-                        var paryCustomerStr = accountingCustomerParty?.ChildNodes[0]?.GetRegexClass("cac:Party");
-                        var partyCustomer = XmlStringToXmlNode2(paryCustomerStr);
+                        //var paryCustomerStr = accountingCustomerParty?.ChildNodes[0]?.GetRegexClass("cac:Party");
+                        //var partyCustomer = XmlStringToXmlNode2(paryCustomerStr);
 
-                        var partyIdentificationCustomerStr = partyCustomer?.ChildNodes[0]?.GetRegexClass("cac:PartyIdentification");
-                        var partyIdentificationCustomer = XmlStringToXmlNode2(partyIdentificationCustomerStr);
+                        //var partyIdentificationCustomerStr = partyCustomer?.ChildNodes[0]?.GetRegexClass("cac:PartyIdentification");
+                        //var partyIdentificationCustomer = XmlStringToXmlNode2(partyIdentificationCustomerStr);
 
-                        var partyNameCustomerStr = partyCustomer?.ChildNodes[0]?.GetRegexClass("cac:PartyName");
-                        var partyNameCustomer = XmlStringToXmlNode2(partyNameCustomerStr);
+                        //var partyNameCustomerStr = partyCustomer?.ChildNodes[0]?.GetRegexClass("cac:PartyName");
+                        //var partyNameCustomer = XmlStringToXmlNode2(partyNameCustomerStr);
 
-                        var postalAddressCustomerStr = partyCustomer?.ChildNodes[0]?.GetRegexClass("cac:PostalAddress");
-                        var postalAddressCustomer = XmlStringToXmlNode2(postalAddressCustomerStr);
+                        //var postalAddressCustomerStr = partyCustomer?.ChildNodes[0]?.GetRegexClass("cac:PostalAddress");
+                        //var postalAddressCustomer = XmlStringToXmlNode2(postalAddressCustomerStr);
 
-                        var countryCustomerStr = postalAddressCustomer?.ChildNodes[0]?.GetRegexClass("cac:Country");
-                        var countryCustomer = XmlStringToXmlNode2(countryCustomerStr);
+                        //var countryCustomerStr = postalAddressCustomer?.ChildNodes[0]?.GetRegexClass("cac:Country");
+                        //var countryCustomer = XmlStringToXmlNode2(countryCustomerStr);
 
-                        var partyTaxChemeCustomerStr = partyCustomer?.ChildNodes[0]?.GetRegexClass("cac:PartyTaxScheme");
-                        var partyTaxChemeCustomer = XmlStringToXmlNode2(partyTaxChemeCustomerStr);
+                        //var partyTaxChemeCustomerStr = partyCustomer?.ChildNodes[0]?.GetRegexClass("cac:PartyTaxScheme");
+                        //var partyTaxChemeCustomer = XmlStringToXmlNode2(partyTaxChemeCustomerStr);
 
-                        var contactCustomerStr = partyCustomer?.ChildNodes[0]?.GetRegexClass("cac:Contact");
-                        var contactCustomer = XmlStringToXmlNode2(contactCustomerStr);
+                        //var contactCustomerStr = partyCustomer?.ChildNodes[0]?.GetRegexClass("cac:Contact");
+                        //var contactCustomer = XmlStringToXmlNode2(contactCustomerStr);
 
                         var allowanceChargeStr = nodeContent?.ChildNodes[0]?.GetRegexClasses("cac:AllowanceCharge");
 
@@ -448,41 +448,41 @@ namespace Business.Concrete
                                 Note = nodeContent?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Note"),
                                 DocumentCurrencyCode = nodeContent?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:DocumentCurrencyCode"),
                                 LineCountNumeric = nodeContent?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:LineCountNumeric"),
-                                AdditionalDocumentReference = new AdditionalDocumentReference
-                                {
-                                    ID = nodeAdditionalDocumentReference?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
-                                    IssueDate = nodeAdditionalDocumentReference?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:IssueDate"),
-                                    DocumentType = nodeAdditionalDocumentReference?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:DocumentType"),
-                                    Attachment = new Attachment(),
-                                },
-                                Signature = new Signature
-                                {
-                                    ID = signature?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
-                                    SignatoryParty = new SignatoryParty
-                                    {
-                                        PartyIdentification = new PartyIdentification
-                                        {
-                                            ID = partyIdentification?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID")
-                                        },
-                                        PostalAddress = new PostalAddress
-                                        {
-                                            ID = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
-                                            Room = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Room"),
-                                            StreetName = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:StreetName"),
-                                            BuildingNumber = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingNumber"),
-                                            CitySubdivisionName = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CitySubdivisionName"),
-                                            CityName = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CityName"),
-                                            PostalZone = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:PostalZone"),
-                                            District = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:District"),
-                                            BuildingName = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingName"),
-                                            Region = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Region"),
-                                            Country = new Country
-                                            {
-                                                Name = country?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
-                                            }
-                                        }
-                                    }
-                                },
+                                //AdditionalDocumentReference = new AdditionalDocumentReference
+                                //{
+                                //    ID = nodeAdditionalDocumentReference?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
+                                //    IssueDate = nodeAdditionalDocumentReference?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:IssueDate"),
+                                //    DocumentType = nodeAdditionalDocumentReference?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:DocumentType"),
+                                //    Attachment = new Attachment(),
+                                //},
+                                //Signature = new Signature
+                                //{
+                                //    ID = signature?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
+                                //    SignatoryParty = new SignatoryParty
+                                //    {
+                                //        PartyIdentification = new PartyIdentification
+                                //        {
+                                //            ID = partyIdentification?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID")
+                                //        },
+                                //        PostalAddress = new PostalAddress
+                                //        {
+                                //            ID = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
+                                //            Room = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Room"),
+                                //            StreetName = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:StreetName"),
+                                //            BuildingNumber = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingNumber"),
+                                //            CitySubdivisionName = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CitySubdivisionName"),
+                                //            CityName = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CityName"),
+                                //            PostalZone = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:PostalZone"),
+                                //            District = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:District"),
+                                //            BuildingName = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingName"),
+                                //            Region = postalAddress?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Region"),
+                                //            Country = new Country
+                                //            {
+                                //                Name = country?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
+                                //            }
+                                //        }
+                                //    }
+                                //},
                                 AccountingSupplierParty = new AccountingSupplierParty
                                 {
                                     Party = new Party
@@ -532,56 +532,56 @@ namespace Business.Concrete
                                         }
                                     }
                                 },
-                                AccountingCustomerParty = new AccountingCustomerParty
-                                {
-                                    Party = new Party
-                                    {
-                                        WebsiteURI = partyCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:WebsiteURI"),
-                                        PartyIdentifications = new List<PartyIdentification>()
-                                        {
-                                            new PartyIdentification
-                                            {
-                                                ID = partyIdentificationCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
-                                            }
-                                        },
-                                        PartyName = new PartyName
-                                        {
-                                            Name = partyNameCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
-                                        },
-                                        PostalAddress = new PostalAddress
-                                        {
-                                            ID = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
-                                            Room = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Room"),
-                                            StreetName = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:StreetName"),
-                                            BuildingNumber = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingNumber"),
-                                            CitySubdivisionName = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CitySubdivisionName"),
-                                            CityName = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CityName"),
-                                            PostalZone = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:PostalZone"),
-                                            District = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:District"),
-                                            BuildingName = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingName"),
-                                            Region = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Region"),
-                                            Country = new Country
-                                            {
-                                                Name = countryCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
-                                            }
-                                        },
-                                        PartyTaxSheme = new PartyTaxScheme
-                                        {
-                                            TaxScheme = new TaxScheme
-                                            {
-                                                Name = partyTaxChemeCustomer?.ChildNodes[0]?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
-                                            }
-                                        },
-                                        Contact = new ContactInv
-                                        {
-                                            Telephone = contactCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Telephone"),
-                                            Telefax = contactCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Telefax"),
-                                            ElectronicMail = contactCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ElectronicMail"),
-                                            Note = contactCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Note"),
-                                            Name = contactCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name")
-                                        }
-                                    }
-                                },
+                                //AccountingCustomerParty = new AccountingCustomerParty
+                                //{
+                                //    Party = new Party
+                                //    {
+                                //        WebsiteURI = partyCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:WebsiteURI"),
+                                //        PartyIdentifications = new List<PartyIdentification>()
+                                //        {
+                                //            new PartyIdentification
+                                //            {
+                                //                ID = partyIdentificationCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
+                                //            }
+                                //        },
+                                //        PartyName = new PartyName
+                                //        {
+                                //            Name = partyNameCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
+                                //        },
+                                //        PostalAddress = new PostalAddress
+                                //        {
+                                //            ID = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
+                                //            Room = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Room"),
+                                //            StreetName = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:StreetName"),
+                                //            BuildingNumber = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingNumber"),
+                                //            CitySubdivisionName = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CitySubdivisionName"),
+                                //            CityName = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CityName"),
+                                //            PostalZone = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:PostalZone"),
+                                //            District = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:District"),
+                                //            BuildingName = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingName"),
+                                //            Region = postalAddressCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Region"),
+                                //            Country = new Country
+                                //            {
+                                //                Name = countryCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
+                                //            }
+                                //        },
+                                //        PartyTaxSheme = new PartyTaxScheme
+                                //        {
+                                //            TaxScheme = new TaxScheme
+                                //            {
+                                //                Name = partyTaxChemeCustomer?.ChildNodes[0]?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name"),
+                                //            }
+                                //        },
+                                //        Contact = new ContactInv
+                                //        {
+                                //            Telephone = contactCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Telephone"),
+                                //            Telefax = contactCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Telefax"),
+                                //            ElectronicMail = contactCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ElectronicMail"),
+                                //            Note = contactCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Note"),
+                                //            Name = contactCustomer?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Name")
+                                //        }
+                                //    }
+                                //},
                                 AllowanceCharges = new List<AllowanceCharge>(),
                                 TaxTotal = new TaxTotal
                                 {
@@ -1834,7 +1834,7 @@ namespace Business.Concrete
                 return new ErrorDataResult<GetEArchiveInvoiceStatusResponse>(null, ex.Message);
             }
         }
-        public IDataResult<GetEArchiveReportResponse> EArchiveReport(string sessionId, string reportPeriod, string reportStatus = "Y")
+        public IDataResult<GetEArchiveReportResponse> GetEArchiveReport(string sessionId, string reportPeriod, string reportStatus = "Y")
         {
             try
             {
@@ -1876,26 +1876,33 @@ namespace Business.Concrete
 
                     var node = res_.Data.ChildNodes[1]?.ChildNodes[0]?.ChildNodes[0];
 
-                    var reportStr = node.GetRegexClass("REPORT");
-                    var report = XmlStringToXmlNode2(reportStr);
+                    var reportsStr = node.GetRegexClasses("REPORT");
 
                     var REQUEST_RETURNStr = node.GetRegexClass("REQUEST_RETURN");
                     var REQUEST_RETURN = XmlStringToXmlNode2(REQUEST_RETURNStr);
 
                     getEArchiveReportResponse = new()
                     {
-                        REPORT = new REPORT
-                        {
-                            REPORT_NO = report?.ChildNodes[0]?.ChildNodes?.GetValue("REPORT_NO"),
-                            REPORT_PERIOD = report?.ChildNodes[0]?.ChildNodes?.GetValue("REPORT_PERIOD"),
-                            REPORT_SUB_STATUS = report?.ChildNodes[0]?.ChildNodes?.GetValue("REPORT_SUB_STATUS"),
-                        },
+                        Reports = new List<REPORT>(),
                         REQUEST_RETURN = new REQUEST_RETURN
                         {
                             INTL_TXN_ID = REQUEST_RETURN?.ChildNodes[0]?.ChildNodes?.GetValue("INTL_TXN_ID"),
                             RETURN_CODE = REQUEST_RETURN?.ChildNodes[0]?.ChildNodes?.GetValue("RETURN_CODE"),
                         }
                     };
+
+                    for (int i = 0; i < reportsStr.Count; i++)
+                    {
+                        var reportNode = XmlStringToXmlNode2(reportsStr[i]);
+
+                        REPORT report = new REPORT
+                        {
+                            REPORT_NO = reportNode?.ChildNodes[0]?.ChildNodes?.GetValue("REPORT_NO"),
+                            REPORT_PERIOD = reportNode?.ChildNodes[0]?.ChildNodes?.GetValue("REPORT_PERIOD"),
+                            REPORT_SUB_STATUS = reportNode?.ChildNodes[0]?.ChildNodes?.GetValue("REPORT_SUB_STATUS"),
+                        };
+                        getEArchiveReportResponse.Reports.Add(report);
+                    }
 
                     return new SuccessDataResult<GetEArchiveReportResponse>(getEArchiveReportResponse);
                 }

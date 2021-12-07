@@ -8,7 +8,7 @@ namespace Entities.Dtos.Response
 {
     public class GetEArchiveReportResponse
     {
-        public REPORT REPORT { get; set; }
+        public List<REPORT> Reports { get; set; }
         public REQUEST_RETURN REQUEST_RETURN { get; set; }
     }
     public class REPORT
