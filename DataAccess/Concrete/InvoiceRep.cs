@@ -314,8 +314,9 @@ namespace DataAccess.Concrete
                         {
                             LIMIT = limit,
                             DATE_TYPE = "CREATE",
-                            START_DATE = "2021-10-01",
-                            END_DATE = "2021-12-19",
+                            START_DATE = "2021-11-01",
+                            END_DATE = "2021-11-19",
+
                             READ_INCLUDED = "true",
                             DIRECTION = "IN"
                         },
