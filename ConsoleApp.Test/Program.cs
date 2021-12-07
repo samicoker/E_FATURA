@@ -44,11 +44,11 @@ namespace ConsoleApp.Test
             //string session = "8c06b950-e258-4ff5-b631-cc5aab8140d3";
 
             var sesres = example.GetLogin("izibiz-test2", "izi321");
-            var res = example.GetLogOut(sesres.Data.SessionId);
+            //var res = example.GetLogOut(sesres.Data.SessionId);
 
 
             //var res = example.SendInvoice(sesres.Data.SessionId);
-            //var res = example.GetInvoice(sesres.Data.SessionId, 100);
+            var res = example.GetInvoice(sesres.Data.SessionId, 100);
             //var res = example.MarkInvoice(sesres.Data.SessionId, invoices);
             //var res = example.SendInvoiceResponseWithServerSign(sesres.Data.SessionId, invoice, false);
             //var res = example.GetInvoiceStatus(sesres.Data.SessionId, invoice);

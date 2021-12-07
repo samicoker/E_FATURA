@@ -200,8 +200,7 @@ namespace Business.Concrete
                 {
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EFaturaOIB", xml, "POST",
-                        header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EFaturaOIB", xml, "POST", header);
 
                     if (res_ == null)
                     {
@@ -242,7 +241,6 @@ namespace Business.Concrete
                 return new ErrorDataResult<SendInvoiceResponse>(null, ex.Message);
             }
         }
-
         public IDataResult<GetInvoiceResponse> GetInvoice(string sessionId, byte limit)
         {
             try
@@ -303,10 +301,10 @@ namespace Business.Concrete
                     {
                         var nodeInvoice = baseInvo.ChildNodes[i];
 
-                        var nodeHeaderStr = nodeInvoice.GetRegexClass("HEADER");
+                        var nodeHeaderStr = nodeInvoice?.GetRegexClass("HEADER");
                         var nodeHeader = XmlStringToXmlNode2(nodeHeaderStr);
 
-                        var nodeContentBase64 = nodeInvoice.ChildNodes.GetValue("CONTENT");
+                        var nodeContentBase64 = nodeInvoice?.ChildNodes?.GetValue("CONTENT");
                         var nodeContentByte = Convert.FromBase64String(nodeContentBase64);
                         var nodeContentString = Encoding.UTF8.GetString(nodeContentByte);
                         var nodeContent = XmlStringToXmlNode(nodeContentString);
@@ -409,7 +407,6 @@ namespace Business.Concrete
                         var taxShemeStr = taxCategory?.ChildNodes[0]?.GetRegexClass("cac:TaxScheme");
                         var taxSheme = XmlStringToXmlNode2(taxShemeStr);
 
-
                         var legalMonetaryTotalStr = nodeContent?.ChildNodes[0]?.GetRegexClass("cac:LegalMonetaryTotal");
                         var legalMonetaryTotal = XmlStringToXmlNode2(legalMonetaryTotalStr);
 
@@ -434,8 +431,7 @@ namespace Business.Concrete
                                 GIB_STATUS_CODE = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("GIB_STATUS_CODE"),
                                 GIB_STATUS_DESCRIPTION = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("GIB_STATUS_DESCRIPTION"),
                                 CDATE = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("CDATE"),
-                                ENVELOPE_IDENTIFIER = nodeHeader?.ChildNodes[0]?.ChildNodes
-                                    ?.GetValue("ENVELOPE_IDENTIFIER"),
+                                ENVELOPE_IDENTIFIER = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("ENVELOPE_IDENTIFIER"),
                                 STATUS_CODE = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("STATUS_CODE"),
                             },
                             CONTENT = new CONTENT
@@ -497,7 +493,7 @@ namespace Business.Concrete
                                         {
                                             new PartyIdentification
                                             {
-                                                ID = partyIdentificationAccounting?.ChildNodes[0]?.ChildNodes.GetValue("cbc:ID"),
+                                                ID = partyIdentificationAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
                                             }
                                         },
                                         PartyName = new PartyName
@@ -507,10 +503,8 @@ namespace Business.Concrete
                                         PostalAddress = new PostalAddress
                                         {
                                             ID = postalAddressAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
-                                            Room = postalAddressAccounting?.ChildNodes[0]?.ChildNodes
-                                                ?.GetValue("cbc:Room"),
-                                            StreetName = postalAddressAccounting?.ChildNodes[0]?.ChildNodes
-                                                ?.GetValue("cbc:StreetName"),
+                                            Room = postalAddressAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Room"),
+                                            StreetName = postalAddressAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:StreetName"),
                                             BuildingNumber = postalAddressAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:BuildingNumber"),
                                             CitySubdivisionName = postalAddressAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CitySubdivisionName"),
                                             CityName = postalAddressAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:CityName"),
@@ -532,12 +526,9 @@ namespace Business.Concrete
                                         },
                                         Contact = new ContactInv
                                         {
-                                            Telephone = contactAccounting?.ChildNodes[0]?.ChildNodes
-                                                ?.GetValue("cbc:Telephone"),
-                                            Telefax = contactAccounting?.ChildNodes[0]?.ChildNodes
-                                                ?.GetValue("cbc:Telefax"),
-                                            ElectronicMail = contactAccounting?.ChildNodes[0]?.ChildNodes
-                                                ?.GetValue("cbc:ElectronicMail"),
+                                            Telephone = contactAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Telephone"),
+                                            Telefax = contactAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Telefax"),
+                                            ElectronicMail = contactAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ElectronicMail"),
                                             Note = contactAccounting?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:Note"),
                                         }
                                     }
@@ -792,7 +783,6 @@ namespace Business.Concrete
                         getresponseXmlConvertString = res_.Data.InnerText;
                     }
 
-
                     throw new Exception(Messages.AnErrorOccurred + ex.Message);
                 }
             }
@@ -802,7 +792,6 @@ namespace Business.Concrete
             }
             //throw new NotImplementedException();
         }
-
         public IDataResult<MarkInvoiceResponse> MarkInvoice(string sessionId, List<InvoiceMark> invoices)
         {
             try
@@ -832,8 +821,7 @@ namespace Business.Concrete
                 {
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EFaturaOIB", xml, "POST",
-                        header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EFaturaOIB", xml, "POST", header);
 
                     if (res_ == null)
                     {
@@ -845,20 +833,19 @@ namespace Business.Concrete
                         throw new Exception(res.Message);
                     }
 
-                    var node = res_.Data.ChildNodes[1].ChildNodes[0].ChildNodes[0].ChildNodes[0];
+                    var node = res_.Data.ChildNodes[1]?.ChildNodes[0]?.ChildNodes[0]?.ChildNodes[0];
 
                     if (node == null)
                     {
                         throw new Exception(Messages.CantGetInformationFromSOAP);
                     }
 
-
                     markInvoiceResponse = new MarkInvoiceResponse
                     {
                         REQUEST_RETURN = new REQUEST_RETURN
                         {
-                            INTL_TXN_ID = node.ChildNodes.GetValue("INTL_TXN_ID"),
-                            RETURN_CODE = node.ChildNodes.GetValue("RETURN_CODE")
+                            INTL_TXN_ID = node.ChildNodes?.GetValue("INTL_TXN_ID"),
+                            RETURN_CODE = node.ChildNodes?.GetValue("RETURN_CODE")
                         }
                     };
 
@@ -881,9 +868,7 @@ namespace Business.Concrete
                 return new ErrorDataResult<MarkInvoiceResponse>(null, ex.Message);
             }
         }
-
-        public IDataResult<SendInvoiceResponseWithServerSignResponse> SendInvoiceResponseWithServerSign(
-            string sessionId, INVOICE invoice, bool status)
+        public IDataResult<SendInvoiceResponseWithServerSignResponse> SendInvoiceResponseWithServerSign(string sessionId, INVOICE invoice, bool status)
         {
             try
             {
@@ -899,8 +884,7 @@ namespace Business.Concrete
                     throw new Exception(Messages.NotFoundDataByTableRowID());
                 }
 
-                ITemplate<RSendInvoiceResponseWithServerSignRequest> template =
-                    new SendInvoiceResponseWithServerSignRequestXML();
+                ITemplate<RSendInvoiceResponseWithServerSignRequest> template = new SendInvoiceResponseWithServerSignRequestXML();
 
                 var xmlXElement = template.Run(res.Data);
 
@@ -914,8 +898,7 @@ namespace Business.Concrete
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
 
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EFaturaOIB", xml, "POST",
-                        header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EFaturaOIB", xml, "POST", header);
 
                     if (res_ == null)
                     {
@@ -927,7 +910,7 @@ namespace Business.Concrete
                         throw new Exception(res.Message);
                     }
 
-                    var node = res_.Data.ChildNodes[1].ChildNodes[0].ChildNodes[0].ChildNodes[0];
+                    var node = res_.Data.ChildNodes[1]?.ChildNodes[0]?.ChildNodes[0]?.ChildNodes[0];
 
                     if (node == null)
                     {
@@ -936,12 +919,12 @@ namespace Business.Concrete
 
                     sendInvoiceResponseWithServerSignResponse = new SendInvoiceResponseWithServerSignResponse
                     {
-                        INTL_TXN_ID = node.ChildNodes.GetValue("INTL_TXN_ID"),
-                        CLIENT_TXN_ID = node.ChildNodes.GetValue("CLIENT_TXN_ID"),
-                        RETURN_CODE = node.ChildNodes.GetValue("RETURN_CODE"),
-                        ERROR_CODE = node.ChildNodes.GetValue("ERROR_CODE"),
-                        ERROR_SHORT_DES = node.ChildNodes.GetValue("ERROR_SHORT_DES"),
-                        ERROR_LONG_DES = node.ChildNodes.GetValue("ERROR_LONG_DES")
+                        INTL_TXN_ID = node?.ChildNodes?.GetValue("INTL_TXN_ID"),
+                        CLIENT_TXN_ID = node?.ChildNodes?.GetValue("CLIENT_TXN_ID"),
+                        RETURN_CODE = node?.ChildNodes?.GetValue("RETURN_CODE"),
+                        ERROR_CODE = node?.ChildNodes?.GetValue("ERROR_CODE"),
+                        ERROR_SHORT_DES = node?.ChildNodes?.GetValue("ERROR_SHORT_DES"),
+                        ERROR_LONG_DES = node?.ChildNodes?.GetValue("ERROR_LONG_DES")
                     };
                     return new SuccessDataResult<SendInvoiceResponseWithServerSignResponse>(sendInvoiceResponseWithServerSignResponse);
                 }
@@ -955,7 +938,6 @@ namespace Business.Concrete
                 return new SuccessDataResult<SendInvoiceResponseWithServerSignResponse>(null, ex.Message);
             }
         }
-
         public IDataResult<GetInvoiceStatusResponse> GetInvoiceStatus(string sessionId, INVOICE invoice)
         {
             try
@@ -987,8 +969,7 @@ namespace Business.Concrete
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
 
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EFaturaOIB", xml, "POST",
-                        header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EFaturaOIB", xml, "POST", header);
 
                     if (res_ == null)
                     {
@@ -1009,14 +990,14 @@ namespace Business.Concrete
 
                     getInvoiceStatusResponse = new GetInvoiceStatusResponse
                     {
-                        STATUS = node.ChildNodes.GetValue("STATUS"),
-                        STATUS_DESCRIPTION = node.ChildNodes.GetValue("STATUS_DESCRIPTION"),
-                        GIB_STATUS_CODE = node.ChildNodes.GetValue("GIB_STATUS_CODE"),
-                        GIB_STATUS_DESCRIPTION = node.ChildNodes.GetValue("GIB_STATUS_DESCRIPTION"),
-                        CDATE = node.ChildNodes.GetValue("CDATE"),
-                        ENVELOPE_IDENTIFIER = node.ChildNodes.GetValue("ENVELOPE_IDENTIFIER"),
-                        STATUS_CODE = node.ChildNodes.GetValue("STATUS_CODE"),
-                        DIRECTION = node.ChildNodes.GetValue("DIRECTION"),
+                        STATUS = node?.ChildNodes?.GetValue("STATUS"),
+                        STATUS_DESCRIPTION = node?.ChildNodes?.GetValue("STATUS_DESCRIPTION"),
+                        GIB_STATUS_CODE = node?.ChildNodes?.GetValue("GIB_STATUS_CODE"),
+                        GIB_STATUS_DESCRIPTION = node?.ChildNodes?.GetValue("GIB_STATUS_DESCRIPTION"),
+                        CDATE = node?.ChildNodes?.GetValue("CDATE"),
+                        ENVELOPE_IDENTIFIER = node?.ChildNodes?.GetValue("ENVELOPE_IDENTIFIER"),
+                        STATUS_CODE = node?.ChildNodes?.GetValue("STATUS_CODE"),
+                        DIRECTION = node?.ChildNodes?.GetValue("DIRECTION"),
                     };
                     return new SuccessDataResult<GetInvoiceStatusResponse>(getInvoiceStatusResponse);
                 }
@@ -1030,7 +1011,6 @@ namespace Business.Concrete
                 return new SuccessDataResult<GetInvoiceStatusResponse>(null, ex.Message);
             }
         }
-
         public IDataResult<GetGibUserListResponse> GetGibUserList(string sessionId)
         {
             try
@@ -1062,8 +1042,7 @@ namespace Business.Concrete
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
 
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/AuthenticationWS", xml, "POST",
-                        header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/AuthenticationWS", xml, "POST", header);
 
                     if (res_ == null)
                     {
@@ -1104,7 +1083,6 @@ namespace Business.Concrete
                 return new SuccessDataResult<GetGibUserListResponse>(null, ex.Message);
             }
         }
-
         #endregion
 
         #region E-ARCHIVE
@@ -1132,7 +1110,7 @@ namespace Business.Concrete
                 var xml = xmlXElement.ObjectToSoapXml();
 
                 WriteToArchieveExtendedResponse rWriteToArchieveExtendedResponse;
-                ;
+
                 IDataResult<XmlDocument> res_ = null;
 
                 try
@@ -1140,8 +1118,7 @@ namespace Business.Concrete
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
 
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EIArchiveWS/EFaturaArchive",
-                        xml, "POST", header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EIArchiveWS/EFaturaArchive", xml, "POST", header);
 
                     if (res_ == null)
                     {
@@ -1159,8 +1136,6 @@ namespace Business.Concrete
 
                     var errorTypeStr = node.GetRegexClass("ERROR_TYPE");
                     var errorType = XmlStringToXmlNode2(errorTypeStr);
-                    //var uBLExtensionStr = nodeUBLExtensions.ChildNodes[0].GetClass("ext:UBLExtension");
-                    //var uBLExtensionNode = XmlStringToXmlNode2(uBLExtensionStr);
 
                     if (node == null)
                     {
@@ -1195,7 +1170,6 @@ namespace Business.Concrete
                 return new SuccessDataResult<WriteToArchieveExtendedResponse>(null, ex.Message);
             }
         }
-
         public IDataResult<ReadFromArchiveResponse> ReadFromArchive(string sessionId, INVOICE Invoice)
         {
             try
@@ -1762,7 +1736,6 @@ namespace Business.Concrete
                 return new SuccessDataResult<ReadFromArchiveResponse>(null, ex.Message);
             }
         }
-
         public IDataResult<CancelEArchiveInvoiceResponse> CancelEArchiveInvoice(string sessionId, string uuid)
         {
             try
@@ -1841,7 +1814,6 @@ namespace Business.Concrete
                 return new SuccessDataResult<CancelEArchiveInvoiceResponse>(null, ex.Message);
             }
         }
-
         public IDataResult<GetEArchiveInvoiceStatusResponse> EArchiveInvoiceStatus(string sessionId, string uuid)
         {
             try
@@ -1912,7 +1884,6 @@ namespace Business.Concrete
                 return new ErrorDataResult<GetEArchiveInvoiceStatusResponse>(null, ex.Message);
             }
         }
-
         public IDataResult<GetEArchiveReportResponse> EArchiveReport(string sessionId, string reportPeriod, string reportStatus = "Y")
         {
             try
@@ -1989,7 +1960,6 @@ namespace Business.Concrete
                 return new ErrorDataResult<GetEArchiveReportResponse>(null, ex.Message);
             }
         }
-
         public IDataResult<ReadEArchiveReportResponse> ReadEArchiveReport(string sessionId, string raporNo)
         {
             try
@@ -2113,8 +2083,7 @@ namespace Business.Concrete
                 return new ErrorDataResult<ReadEArchiveReportResponse>(null, ex.Message);
             }
         }
-        public IDataResult<EmailEarchiveInvoiceResponse> EmailEarchiveInvoice(string sessionId, string uuId,
-            string eMail)
+        public IDataResult<EmailEarchiveInvoiceResponse> EmailEarchiveInvoice(string sessionId, string uuId, string eMail)
         {
             try
             {
