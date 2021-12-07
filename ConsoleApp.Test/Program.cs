@@ -34,7 +34,7 @@ namespace ConsoleApp.Test
             INVOICE invoice = new INVOICE
             {
                 ID = "MES2021000000420",
-                UUID = "8cd7ab00-55fa-42b0-a1bd-9f3b4c91896b",
+                UUID = "8cd7ab00-55fa-42b0-a1bd-9f3b4c91896b", //8cd7ab00-55fa-42b0-a1bd-9f3b4c91896b
                 HEADER = new HEADERINV
                 {
                     DIRECTION = "IN"
@@ -44,7 +44,7 @@ namespace ConsoleApp.Test
             //string session = "8c06b950-e258-4ff5-b631-cc5aab8140d3";
 
             var sesres = example.GetLogin("izibiz-test2", "izi321");
-            //var res = example.GetLogOut(session);
+            //var res = example.GetLogOut(sesres.Data.SessionId);
 
 
             //var res = example.SendInvoice(session);
@@ -55,13 +55,13 @@ namespace ConsoleApp.Test
             //var res = example.SendInvoiceResponseWithServerSign(session, invoice, false);
 
 
-            //var res = example.WriteToArchieveExtended(session);
-            //var res = example.ReadFromArchive(session,invoice);
-            //var res = example.CancelEArchiveInvoice(session, invoice.UUID);
-            //var res = example.EArchiveInvoiceStatus(session, invoice.UUID);
-            //var res = example.EArchiveReport(session, "202110");
-            //var res = example.ReadEArchiveReport(session, "b251241e-3439-4c54-a6dd-ba52a690f8d3");
-            //var res = example.EmailEarchiveInvoice(session, "93C30A9C-12C4-4C75-B97C-51013D2FA45F", "a@a.com.tr");
+            //var res = example.WriteToArchieveExtended(sesres.Data.SessionId);
+            //var res = example.ReadFromArchive(sesres.Data.SessionId, invoice);
+            //var res = example.CancelEArchiveInvoice(sesres.Data.SessionId, invoice.UUID);
+            //var res = example.EArchiveInvoiceStatus(sesres.Data.SessionId, invoice.UUID);
+            var res = example.GetEArchiveReport(sesres.Data.SessionId, "202110"); // 202110
+            //var res = example.ReadEArchiveReport(sesres.Data.SessionId, "b251241e-3439-4c54-a6dd-ba52a690f8d3");
+            //var res = example.EmailEarchiveInvoice(sesres.Data.SessionId, "93C30A9C-12C4-4C75-B97C-51013D2FA45F", "a@a.com.tr");
 
             var sonuc = res.Data;
             //var sessionId = sonuc.SessionId;

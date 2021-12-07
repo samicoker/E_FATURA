@@ -97,10 +97,10 @@ namespace DataAccess.Concrete
                                 UBLVersionID = "2.1",
                                 CustomizationID = "TR1.2",
                                 ProfileID = "TICARIFATURA",
-                                ID = "ASD2021000200592",//"DMY2021625142608", "DMY2018625142607",
+                                ID = "ASD2021000200595",//"DMY2021625142608", "DMY2018625142607",
                                 CopyIndicator = "false",
                                 UUID = guid,//"8138d121-ea76-40cf-9de4-e30d3f506de1",
-                                IssueDate = "2021-10-18",//"2021-10-19", //"2018-06-25",
+                                IssueDate = "2021-12-06",//"2021-10-19", //"2018-06-25",
                                 IssueTime = "16:06:41",
                                 InvoiceTypeCode = "SATIS",
                                 Note = " benim notum",
@@ -316,6 +316,7 @@ namespace DataAccess.Concrete
                             DATE_TYPE = "CREATE",
                             START_DATE = "2021-11-01",
                             END_DATE = "2021-11-19",
+
                             READ_INCLUDED = "true",
                             DIRECTION = "IN"
                         },
@@ -371,7 +372,7 @@ namespace DataAccess.Concrete
                 //STATUS = "RED",
                 INVOICE = new INVOICE
                 {
-                    ID = "ASD2021000200591",//invoice.ID,
+                    ID = "ASD2021000200592",//invoice.ID,
                     UUID = "227584a6-593c-4c90-94a4-9f402e7fe68c", //invoice.UUID,
                     HEADER = new HEADERINV
                     {
@@ -489,10 +490,10 @@ namespace DataAccess.Concrete
                                 {
                                     CONTENT = new CONTENT
                                     {
-                                        UBLVersionID = "2.1",
+                                        UBLVersionID = "2.1", //
                                         CustomizationID = "TR1.2",
                                         ProfileID = "EARSIVFATURA",
-                                        ID = "NEA2021002000006",
+                                        ID = "NEA2021002000010",
                                         CopyIndicator = "false",
                                         UUID = guid, //"631b2f09-ca96-4bbb-81ea-0ccb1c2c2528",
                                         IssueDate = "2021-09-03",
