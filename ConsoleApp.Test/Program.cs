@@ -20,8 +20,8 @@ namespace ConsoleApp.Test
     {
         static void Main(string[] args)
         {
-            IInvoiceService example = new InvoiceManager(new InvoiceRep());          
-            
+            IInvoiceService example = new InvoiceManager(new InvoiceRep());
+
             List<InvoiceMark> invoices = new List<InvoiceMark>
             {
                 new InvoiceMark()
@@ -48,23 +48,12 @@ namespace ConsoleApp.Test
 
 
             //var res = example.SendInvoice(sesres.Data.SessionId);
-            
-            while (true)
-            {
-                var res = example.GetInvoice(sesres.Data.SessionId, 100);
-                if (res.Data.Invoices.Count == 100)
-                {
-                    break;
-                }
-            }
-           
-            //var res = example.SendInvoice(sesres.Data.SessionId);
-            //var res = example.GetInvoice(sesres.Data.SessionId, 90);
+            //var res = example.GetInvoice(sesres.Data.SessionId, 100);
             //var res = example.MarkInvoice(sesres.Data.SessionId, invoices);
             //var res = example.SendInvoiceResponseWithServerSign(sesres.Data.SessionId, invoice, false);
             //var res = example.GetInvoiceStatus(sesres.Data.SessionId, invoice);
             //var res = example.GetGibUserList(sesres.Data.SessionId);
-
+            var res = example.GetInvoiceStatusAll(sesres.Data.SessionId, "8cd7ab00-55fa-42b0-a1bd-9f3b4c91896b");
 
             //var res = example.WriteToArchieveExtended(sesres.Data.SessionId);
             //var res = example.ReadFromArchive(sesres.Data.SessionId, invoice);
@@ -74,7 +63,7 @@ namespace ConsoleApp.Test
             //var res = example.ReadEArchiveReport(sesres.Data.SessionId, "b251241e-3439-4c54-a6dd-ba52a690f8d3");
             //var res = example.EmailEarchiveInvoice(sesres.Data.SessionId, "93C30A9C-12C4-4C75-B97C-51013D2FA45F", "a@a.com.tr");
 
-            //var sonuc = res.Data;
+            var sonuc = res.Data;
             //var sessionId = sonuc.SessionId;
         }
 

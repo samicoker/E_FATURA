@@ -10,22 +10,23 @@ namespace DataAccess.Abstract
 {
     public interface IInvoiceDal
     {
-        // AUTHENTICATION
+        #region AUTHENTICATION
         IDataResult<RLoginRequest> GetLogin(string userName, string password);
         IDataResult<RLogOutRequest> GetLogOut(string sessionId);
-        // AUTHENTICATION
+        #endregion
 
-        // INVOICE
+        #region INVOICE
         IDataResult<RSendInvoiceRequest> SendInvoice(string sessionId);
         IDataResult<RGetInvoiceRequest> GetInvoice(string sessionId, byte limit);
         IDataResult<RMarkInvoiceRequest> GetMarkInvoice(string sessionId, List<InvoiceMark> invoices);
         IDataResult<RSendInvoiceResponseWithServerSignRequest> GetSendInvoiceResponseWithServerSign(string sessionId, INVOICE invoice, bool status);
         IDataResult<RGetInvoiceStatusRequest> GetInvoiceStatus(string sessionId, INVOICE invoice);
         IDataResult<RGetGibUserListRequest> GetGibUserListRequest(string sessionId);
+        IDataResult<RGetInvoiceStatusAllRequest> GetInvoiceStatusAllRequest(string sessionId, params string[] UUID);
 
-        // INVOICE
+        #endregion
 
-        // ARCHIVE
+        #region ARCHIVE
 
         IDataResult<RWriteToArchieveExtendedRequest> GetWriteToArchieveExtendedRequest(string sessionId);
         IDataResult<RReadFromArchiveRequest> GetReadFromArchive(string sessionId, string invoiceId);
@@ -35,6 +36,6 @@ namespace DataAccess.Abstract
         IDataResult<RReadEArchiveReportRequest> GetReadEArchiveReportRequest(string sessionId, string raporNo);
         IDataResult<RGetEmailEarchiveInvoiceRequest> GetEmailEarchiveInvoiceRequest(string sessionId, string uuId, string eMail);
 
-        // ARCHIVE
+        #endregion
     }
 }

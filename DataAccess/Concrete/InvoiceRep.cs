@@ -97,10 +97,10 @@ namespace DataAccess.Concrete
                                 UBLVersionID = "2.1",
                                 CustomizationID = "TR1.2",
                                 ProfileID = "TICARIFATURA",
-                                ID = "ASD2021000200595",//"DMY2021625142608", "DMY2018625142607",
+                                ID = "ASD2021000200596",//"DMY2021625142608", "DMY2018625142607",
                                 CopyIndicator = "false",
                                 UUID = guid,//"8138d121-ea76-40cf-9de4-e30d3f506de1",
-                                IssueDate = "2021-12-06",//"2021-10-19", //"2018-06-25",
+                                IssueDate = "2021-12-07",//"2021-10-19", //"2018-06-25",
                                 IssueTime = "16:06:41",
                                 InvoiceTypeCode = "SATIS",
                                 Note = " benim notum",
@@ -314,7 +314,7 @@ namespace DataAccess.Concrete
                         {
                             LIMIT = limit,
                             DATE_TYPE = "CREATE",
-                            START_DATE = "2021-11-01",
+                            START_DATE = "2021-10-01",
                             END_DATE = "2021-11-19",
 
                             READ_INCLUDED = "true",
@@ -372,8 +372,8 @@ namespace DataAccess.Concrete
                 //STATUS = "RED",
                 INVOICE = new INVOICE
                 {
-                    ID = "ASD2021000200592",//invoice.ID,
-                    UUID = "227584a6-593c-4c90-94a4-9f402e7fe68c", //invoice.UUID,
+                    ID = invoice.ID, //"ASD2021000200592",//invoice.ID, "MES2021000000421",
+                    UUID = invoice.UUID, //"227584a6-593c-4c90-94a4-9f402e7fe68c", //invoice.UUID, "0312cdb0-5c5b-41ae-913f-cb717418bcd3", 
                     HEADER = new HEADERINV
                     {
                         DIRECTION = invoice.HEADER.DIRECTION,
@@ -455,6 +455,25 @@ namespace DataAccess.Concrete
                 ALIAS_MODIFY_DATE = string.Empty,
             };
             return new SuccessDataResult<RGetGibUserListRequest>(getGibUserListRequest);
+        }
+        public IDataResult<RGetInvoiceStatusAllRequest> GetInvoiceStatusAllRequest(string sessionId, params string[] UUID)
+        {
+            RGetInvoiceStatusAllRequest rGetInvoiceStatusAllRequest = new RGetInvoiceStatusAllRequest
+            {
+                RequestHeader = new REQUEST_HEADER_INVOICE
+                {
+                    SESSION_ID=sessionId,
+                    COMPRESSED ="Y"
+                },
+                UUID = new List<string>()
+            };
+
+            for (int i = 0; i < UUID.Length; i++)
+            {
+                rGetInvoiceStatusAllRequest.UUID.Add(UUID[i]);
+            }
+
+            return new SuccessDataResult<RGetInvoiceStatusAllRequest>(rGetInvoiceStatusAllRequest);
         }
         #endregion
 
@@ -810,6 +829,7 @@ namespace DataAccess.Concrete
 
             return new SuccessDataResult<RGetEmailEarchiveInvoiceRequest>(rGetEmailEarchiveInvoiceRequest);
         }
+        
         #endregion
 
     }

@@ -269,8 +269,7 @@ namespace Business.Concrete
                 {
                     Dictionary<string, string> header = new Dictionary<string, string>();
                     header.Add("Content-Type", "text/xml; charset='UTF - 8'");
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EFaturaOIB", xml, "POST",
-                        header);
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/EFaturaOIB", xml, "POST", header);
 
                     if (res_ == null)
                     {
@@ -415,7 +414,7 @@ namespace Business.Concrete
                         {
                             Header = new Header
                             {
-                                SENDER = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("SENDER"), 
+                                SENDER = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("SENDER"),
                                 RECEIVER = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("RECEIVER"),
                                 SUPPLIER = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("SUPPLIER"),
                                 CUSTOMER = nodeHeader?.ChildNodes[0]?.ChildNodes?.GetValue("CUSTOMER"),
@@ -661,7 +660,7 @@ namespace Business.Concrete
                                 notes = invoiceLines?.ChildNodes[0]?.ChildNodes.GetValues("cbc:Note");
 
 
-                                var orderLineReferenceStr =invoiceLines?.ChildNodes[0]?.GetRegexClass("cac:OrderLineReference");
+                                var orderLineReferenceStr = invoiceLines?.ChildNodes[0]?.GetRegexClass("cac:OrderLineReference");
                                 var orderLineReference = XmlStringToXmlNode2(orderLineReferenceStr);
 
                                 var taxTotalInvoiceLineStr = invoiceLines?.ChildNodes[0]?.GetRegexClass("cac:TaxTotal");
@@ -1033,7 +1032,7 @@ namespace Business.Concrete
                 var xml = xmlXElement.ObjectToSoapXml();
 
                 GetGibUserListResponse getGibUserListResponse;
-                ;
+
                 IDataResult<XmlDocument> res_ = null;
 
                 try
@@ -1080,6 +1079,71 @@ namespace Business.Concrete
             catch (Exception ex)
             {
                 return new SuccessDataResult<GetGibUserListResponse>(null, ex.Message);
+            }
+        }
+        public IDataResult<GetInvoiceStatusAllResponse> GetInvoiceStatusAll(string sessionId, params string[] UUID)
+        {
+            try
+            {
+                var res = _iInvoiceDal.GetInvoiceStatusAllRequest(sessionId, UUID);
+
+                if (!res.Success)
+                {
+                    throw new Exception(res.Message);
+                }
+
+                if (res.Data == null)
+                {
+                    throw new Exception(Messages.NotFoundDataByTableRowID());
+                }
+
+                ITemplate<RGetInvoiceStatusAllRequest> template = new GetInvoiceStatusAllXML();
+
+                var xmlXElement = template.Run(res.Data);
+
+                var xml = xmlXElement.ObjectToSoapXml();
+
+                GetInvoiceStatusAllResponse getInvoiceStatusAllResponse;
+                IDataResult<XmlDocument> res_ = null;
+
+                try
+                {
+                    Dictionary<string, string> header = new Dictionary<string, string>();
+                    header.Add("Content-Type", "text/xml; charset='UTF - 8'");
+
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/AuthenticationWS", xml, "POST", header);
+
+                    if (res_ == null)
+                    {
+                        throw new Exception(Messages.NotNull("Response"));
+                    }
+                    if (!res_.Success)
+                    {
+                        throw new Exception(res_.Message);
+                    }
+
+                    var node = res_.Data.ChildNodes[1]?.ChildNodes[0]?.ChildNodes[0];
+
+                    if (node == null)
+                    {
+                        throw new Exception(Messages.CantGetInformationFromSOAP);
+                    }
+
+                    getInvoiceStatusAllResponse = new()
+                    {
+
+                    };
+
+                    return new SuccessDataResult<GetInvoiceStatusAllResponse>(getInvoiceStatusAllResponse);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(Messages.AnErrorOccurred + ex.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new SuccessDataResult<GetInvoiceStatusAllResponse>(null, ex.Message);
             }
         }
         #endregion
@@ -1192,7 +1256,7 @@ namespace Business.Concrete
                 var xml = xmlXElement.ObjectToSoapXml();
 
                 ReadFromArchiveResponse readFromArchiveResponse;
-                
+
                 IDataResult<XmlDocument> res_ = null;
 
                 try
