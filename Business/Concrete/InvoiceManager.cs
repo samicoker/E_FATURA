@@ -165,16 +165,87 @@ namespace Business.Concrete
                 return new ErrorDataResult<LogOutResponse>(null, ex.Message);
             }
         }
+        public IDataResult<GetGibUserListResponse> GetGibUserList(string sessionId)
+        {
+            try
+            {
+                var res = _iInvoiceDal.GetGibUserListRequest(sessionId);
 
+                if (!res.Success)
+                {
+                    throw new Exception(res.Message);
+                }
+
+                if (res.Data == null)
+                {
+                    throw new Exception(Messages.NotFoundDataByTableRowID());
+                }
+
+                ITemplate<RGetGibUserListRequest> template = new GetGibUserListRequestXml();
+
+                var xmlXElement = template.Run(res.Data);
+
+                var xml = xmlXElement.ObjectToSoapXml();
+
+                GetGibUserListResponse getGibUserListResponse;
+
+                IDataResult<XmlDocument> res_ = null;
+
+                try
+                {
+                    Dictionary<string, string> header = new Dictionary<string, string>();
+                    header.Add("Content-Type", "text/xml; charset='UTF - 8'");
+
+                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/AuthenticationWS", xml, "POST", header);
+
+                    if (res_ == null)
+                    {
+                        throw new Exception(Messages.NotNull("Response"));
+                    }
+
+                    if (!res_.Success)
+                    {
+                        throw new Exception(res.Message);
+                    }
+
+                    var node = res_.Data.ChildNodes[1]?.ChildNodes[0]?.ChildNodes[0];
+
+                    if (node == null)
+                    {
+                        throw new Exception(Messages.CantGetInformationFromSOAP);
+                    }
+
+                    getGibUserListResponse = new GetGibUserListResponse
+                    {
+                        CONTENT = node.ChildNodes.GetValue("CONTENT"),
+                        ErrorType = new ERROR_TYPE
+                        {
+                            INTL_TXN_ID = node.ChildNodes[0]?.ChildNodes?.GetValue("INTL_TXN_ID"),
+                            ERROR_CODE = node.ChildNodes[0]?.ChildNodes?.GetValue("ERROR_CODE"),
+                            ERROR_SHORT_DES = node.ChildNodes[0]?.ChildNodes?.GetValue("ERROR_SHORT_DES"),
+                        }
+                    };
+                    return new SuccessDataResult<GetGibUserListResponse>(getGibUserListResponse);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(Messages.AnErrorOccurred + ex.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new SuccessDataResult<GetGibUserListResponse>(null, ex.Message);
+            }
+        }
         #endregion
 
         #region E-INVOICE
 
-        public IDataResult<SendInvoiceResponse> SendInvoice(string sessionId)
+        public IDataResult<SendInvoiceResponse> SendInvoice(string sessionId, List<RINVOICE> rINVOICEs)
         {
             try
             {
-                var res = _iInvoiceDal.SendInvoice(sessionId);
+                var res = _iInvoiceDal.SendInvoice(sessionId, rINVOICEs);
 
                 if (!res.Success)
                 {
@@ -866,7 +937,7 @@ namespace Business.Concrete
                 return new ErrorDataResult<MarkInvoiceResponse>(null, ex.Message);
             }
         }
-        public IDataResult<SendInvoiceResponseWithServerSignResponse> SendInvoiceResponseWithServerSign(string sessionId, INVOICE invoice, bool status)
+        public IDataResult<SendInvoiceResponseWithServerSignResponse> SendInvoiceResponseWithServerSign(string sessionId, RINVOICE invoice, bool status)
         {
             try
             {
@@ -936,7 +1007,7 @@ namespace Business.Concrete
                 return new SuccessDataResult<SendInvoiceResponseWithServerSignResponse>(null, ex.Message);
             }
         }
-        public IDataResult<GetInvoiceStatusResponse> GetInvoiceStatus(string sessionId, INVOICE invoice)
+        public IDataResult<GetInvoiceStatusResponse> GetInvoiceStatus(string sessionId, RINVOICE invoice)
         {
             try
             {
@@ -1009,78 +1080,7 @@ namespace Business.Concrete
                 return new SuccessDataResult<GetInvoiceStatusResponse>(null, ex.Message);
             }
         }
-        public IDataResult<GetGibUserListResponse> GetGibUserList(string sessionId)
-        {
-            try
-            {
-                var res = _iInvoiceDal.GetGibUserListRequest(sessionId);
 
-                if (!res.Success)
-                {
-                    throw new Exception(res.Message);
-                }
-
-                if (res.Data == null)
-                {
-                    throw new Exception(Messages.NotFoundDataByTableRowID());
-                }
-
-                ITemplate<RGetGibUserListRequest> template = new GetGibUserListRequestXml();
-
-                var xmlXElement = template.Run(res.Data);
-
-                var xml = xmlXElement.ObjectToSoapXml();
-
-                GetGibUserListResponse getGibUserListResponse;
-
-                IDataResult<XmlDocument> res_ = null;
-
-                try
-                {
-                    Dictionary<string, string> header = new Dictionary<string, string>();
-                    header.Add("Content-Type", "text/xml; charset='UTF - 8'");
-
-                    res_ = CallWebService.Execute("https://efaturatest.izibiz.com.tr:443/AuthenticationWS", xml, "POST", header);
-
-                    if (res_ == null)
-                    {
-                        throw new Exception(Messages.NotNull("Response"));
-                    }
-
-                    if (!res_.Success)
-                    {
-                        throw new Exception(res.Message);
-                    }
-
-                    var node = res_.Data.ChildNodes[1]?.ChildNodes[0]?.ChildNodes[0];
-
-                    if (node == null)
-                    {
-                        throw new Exception(Messages.CantGetInformationFromSOAP);
-                    }
-
-                    getGibUserListResponse = new GetGibUserListResponse
-                    {
-                        CONTENT = node.ChildNodes.GetValue("CONTENT"),
-                        ErrorType = new ERROR_TYPE
-                        {
-                            INTL_TXN_ID = node.ChildNodes[0]?.ChildNodes?.GetValue("INTL_TXN_ID"),
-                            ERROR_CODE = node.ChildNodes[0]?.ChildNodes?.GetValue("ERROR_CODE"),
-                            ERROR_SHORT_DES = node.ChildNodes[0]?.ChildNodes?.GetValue("ERROR_SHORT_DES"),
-                        }
-                    };
-                    return new SuccessDataResult<GetGibUserListResponse>(getGibUserListResponse);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception(Messages.AnErrorOccurred + ex.Message);
-                }
-            }
-            catch (Exception ex)
-            {
-                return new SuccessDataResult<GetGibUserListResponse>(null, ex.Message);
-            }
-        }
         public IDataResult<GetInvoiceStatusAllResponse> GetInvoiceStatusAll(string sessionId, params string[] UUID)
         {
             try
@@ -1233,7 +1233,7 @@ namespace Business.Concrete
                 return new SuccessDataResult<WriteToArchieveExtendedResponse>(null, ex.Message);
             }
         }
-        public IDataResult<ReadFromArchiveResponse> ReadFromArchive(string sessionId, INVOICE Invoice)
+        public IDataResult<ReadFromArchiveResponse> ReadFromArchive(string sessionId, RINVOICE Invoice)
         {
             try
             {
@@ -1389,7 +1389,7 @@ namespace Business.Concrete
 
                     readFromArchiveResponse = new ReadFromArchiveResponse
                     {
-                        Invoice = new INVOICE
+                        Invoice = new RINVOICE
                         {
                             ID = invoice.ChildNodes[1]?.ChildNodes?.GetValue("cbc:ID"),
                             UUID = invoice.ChildNodes[1]?.ChildNodes?.GetValue("cbc:UUID"),

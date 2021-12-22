@@ -11,7 +11,7 @@ namespace Entities.Dtos.Request
         public HEADER Header { get; set; }
         public REQUEST_HEADER_INVOICE REQUEST_HEADER { get; set; }
         public string STATUS { get; set; }
-        public INVOICE INVOICE { get; set; }
+        public RINVOICE INVOICE { get; set; }
         public string DESCRIPTION { get; set; }
     }
 }

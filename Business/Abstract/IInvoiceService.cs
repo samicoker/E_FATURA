@@ -14,21 +14,22 @@ namespace Business.Abstract
         #region AUTHENTICATION
         IDataResult<LoginResponse> GetLogin(string userName, string password);
         IDataResult<LogOutResponse> GetLogOut(string sessionId);
+        IDataResult<GetGibUserListResponse> GetGibUserList(string sessionId);
         #endregion
 
         #region INVOICE
-        IDataResult<SendInvoiceResponse> SendInvoice(string sessionId);
+        IDataResult<SendInvoiceResponse> SendInvoice(string sessionId, List<RINVOICE> rINVOICEs);
         IDataResult<GetInvoiceResponse> GetInvoice(string sessionId, byte limit);
-        IDataResult<GetInvoiceStatusResponse> GetInvoiceStatus(string sessionId, INVOICE invoice);
+        IDataResult<GetInvoiceStatusResponse> GetInvoiceStatus(string sessionId, RINVOICE invoice);
         IDataResult<MarkInvoiceResponse> MarkInvoice(string sessionId, List<InvoiceMark> invoices);
-        IDataResult<SendInvoiceResponseWithServerSignResponse> SendInvoiceResponseWithServerSign(string sessionId, INVOICE invoice, bool status);
-        IDataResult<GetGibUserListResponse> GetGibUserList(string sessionId);
+        IDataResult<SendInvoiceResponseWithServerSignResponse> SendInvoiceResponseWithServerSign(string sessionId, RINVOICE invoice, bool status);
+
         IDataResult<GetInvoiceStatusAllResponse> GetInvoiceStatusAll(string sessionId, params string[] UUID);
         #endregion
 
         #region EARCHIVE
         IDataResult<WriteToArchieveExtendedResponse> WriteToArchieveExtended(string sessionId);
-        IDataResult<ReadFromArchiveResponse> ReadFromArchive(string sessionId, INVOICE Invoice);
+        IDataResult<ReadFromArchiveResponse> ReadFromArchive(string sessionId, RINVOICE Invoice);
         IDataResult<CancelEArchiveInvoiceResponse> CancelEArchiveInvoice(string sessionId, string uuid);
         IDataResult<GetEArchiveInvoiceStatusResponse> EArchiveInvoiceStatus(string sessionId, string uuid);
         IDataResult<GetEArchiveReportResponse> GetEArchiveReport(string sessionId, string reportPeriod, string reportStatus = "Y");

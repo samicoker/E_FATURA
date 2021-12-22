@@ -15,7 +15,7 @@ namespace Entities.Dtos.Request
     public class BodyStatus
     {
         public REQUEST_HEADER_INVOICE REQUEST_HEADER { get; set; }
-        public INVOICE INVOICE { get; set; }
+        public RINVOICE INVOICE { get; set; }
     }
     
     //public class InvoiceStatus

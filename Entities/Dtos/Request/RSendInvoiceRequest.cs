@@ -20,7 +20,8 @@ namespace Entities.Dtos.Request
     public class SendInvoiceRequestBody
     {
         public REQUEST_HEADER_INVOICE REQUEST_HEADER { get; set; }
-        public INVOICE INVOICE { get; set; }
+        public RINVOICE INVOICE { get; set; }
+        public List<RINVOICE> Invoices { get; set; } 
     }
     
    

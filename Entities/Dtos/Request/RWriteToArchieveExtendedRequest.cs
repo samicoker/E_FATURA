@@ -40,6 +40,6 @@ namespace Entities.Dtos.Request
     }
     public class INVOICE_CONTENT
     {
-        public INVOICE INVOICE { get; set; }
+        public RINVOICE INVOICE { get; set; }
     }
 }

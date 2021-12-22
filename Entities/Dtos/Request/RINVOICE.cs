@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Entities.Dtos.Request
 {
-    public class INVOICE
+    public class RINVOICE
     {
         public HEADERINV HEADER { get; set; }
         public string ID { get; set; }

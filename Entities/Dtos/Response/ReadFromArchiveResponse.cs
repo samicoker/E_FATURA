@@ -9,7 +9,7 @@ namespace Entities.Dtos.Response
 {
     public class ReadFromArchiveResponse
     {
-        public INVOICE Invoice { get; set; }
+        public RINVOICE Invoice { get; set; }
         public REQUEST_RETURN RequestReturn { get; set; }
     }
 }

@@ -23,6 +23,9 @@ namespace Business.Extensions.Template.Xml.EFaturaXML
 
             xElement.Add(SoapHeader);
 
+            XElement Body = new XElement("Body");
+            xElement.Add(Body);
+
             return xElement;
         }
     }
