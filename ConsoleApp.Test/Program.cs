@@ -59,7 +59,7 @@ namespace ConsoleApp.Test
                                     UBLVersionID = "2.1",
                                     CustomizationID = "TR1.2",
                                     ProfileID = "TICARIFATURA",
-                                    ID = "ASD2021000200599",//"DMY2021625142608", "DMY2018625142607",
+                                    ID = "ASD2021000200613",//"DMY2021625142608", "DMY2018625142607",
                                     CopyIndicator = "false",
                                     UUID = guid,//"8138d121-ea76-40cf-9de4-e30d3f506de1",
                                     IssueDate = "2021-12-07",//"2021-10-19", //"2018-06-25",
@@ -214,39 +214,42 @@ namespace ConsoleApp.Test
                                         ChargeTotalAmount = "0.00",
                                         PayableAmount = "118.00"
                                     },
-                                    InvoiceLine = new InvoiceLine
+                                    InvoiceLines = new List<InvoiceLine>
                                     {
-                                        ID = "1",
-                                        InvoicedQuantity = "1",
-                                        LineExtensionAmount = "100",
-                                        TaxTotal = new TaxTotal
+                                        new InvoiceLine
                                         {
-                                            TaxAmount = "18.00000",
-                                            TaxSubtotal = new TaxSubtotal
+                                            ID = "1",
+                                            InvoicedQuantity = "1",
+                                            LineExtensionAmount = "100",
+                                            TaxTotal = new TaxTotal
                                             {
-                                                TaxableAmount = "100",
                                                 TaxAmount = "18.00000",
-                                                CalculationSequenceNumeric = "1",
-                                                Percent = "18.00",
-                                                TaxCategory = new TaxCategory
+                                                TaxSubtotal = new TaxSubtotal
                                                 {
-                                                    TaxScheme = new TaxScheme
+                                                    TaxableAmount = "100",
+                                                    TaxAmount = "18.00000",
+                                                    CalculationSequenceNumeric = "1",
+                                                    Percent = "18.00",
+                                                    TaxCategory = new TaxCategory
                                                     {
-                                                        Name = "KDV",
-                                                        TaxTypeCode = "0015"
+                                                        TaxScheme = new TaxScheme
+                                                        {
+                                                            Name = "KDV",
+                                                            TaxTypeCode = "0015"
+                                                        }
                                                     }
                                                 }
+                                            },
+                                            Item = new Item
+                                            {
+                                                Name = "deneme"
+                                            },
+                                            Price = new Price
+                                            {
+                                                PriceAmount = "100"
                                             }
                                         },
-                                        Item = new Item
-                                        {
-                                            Name = "deneme"
-                                        },
-                                        Price = new Price
-                                        {
-                                            PriceAmount = "100"
-                                        }
-                                    }
+                                    },
                                 }
                             },
                         };
