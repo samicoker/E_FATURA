@@ -1150,11 +1150,11 @@ namespace Business.Concrete
 
         #region E-ARCHIVE
 
-        public IDataResult<WriteToArchieveExtendedResponse> WriteToArchieveExtended(string sessionId)
+        public IDataResult<WriteToArchieveExtendedResponse> WriteToArchieveExtended(string sessionId, RINVOICE rINVOICE)
         {
             try
             {
-                var res = _iInvoiceDal.GetWriteToArchieveExtendedRequest(sessionId);
+                var res = _iInvoiceDal.GetWriteToArchieveExtendedRequest(sessionId,rINVOICE);
 
                 if (!res.Success)
                 {
@@ -1233,11 +1233,11 @@ namespace Business.Concrete
                 return new SuccessDataResult<WriteToArchieveExtendedResponse>(null, ex.Message);
             }
         }
-        public IDataResult<ReadFromArchiveResponse> ReadFromArchive(string sessionId, RINVOICE Invoice)
+        public IDataResult<ReadFromArchiveResponse> ReadFromArchive(string sessionId, string invoiceId)
         {
             try
             {
-                var res = _iInvoiceDal.GetReadFromArchive(sessionId, Invoice.UUID);
+                var res = _iInvoiceDal.GetReadFromArchive(sessionId, invoiceId);
 
                 if (!res.Success)
                 {

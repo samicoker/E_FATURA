@@ -29,7 +29,7 @@ namespace DataAccess.Abstract
 
         #region ARCHIVE
 
-        IDataResult<RWriteToArchieveExtendedRequest> GetWriteToArchieveExtendedRequest(string sessionId);
+        IDataResult<RWriteToArchieveExtendedRequest> GetWriteToArchieveExtendedRequest(string sessionId, RINVOICE rINVOICE);
         IDataResult<RReadFromArchiveRequest> GetReadFromArchive(string sessionId, string invoiceId);
         IDataResult<RCancelEArchiveInvoiceRequest> GetCancelEArchiveInvoice(string sessionId, string uuid);
         IDataResult<RGetEArchiveInvoiceStatusRequest> GetEArchiveInvoiceStatus(string sessionId, string uuid);

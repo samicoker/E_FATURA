@@ -28,8 +28,8 @@ namespace Business.Abstract
         #endregion
 
         #region EARCHIVE
-        IDataResult<WriteToArchieveExtendedResponse> WriteToArchieveExtended(string sessionId);
-        IDataResult<ReadFromArchiveResponse> ReadFromArchive(string sessionId, RINVOICE Invoice);
+        IDataResult<WriteToArchieveExtendedResponse> WriteToArchieveExtended(string sessionId, RINVOICE rINVOICE);
+        IDataResult<ReadFromArchiveResponse> ReadFromArchive(string sessionId, string invoiceId);
         IDataResult<CancelEArchiveInvoiceResponse> CancelEArchiveInvoice(string sessionId, string uuid);
         IDataResult<GetEArchiveInvoiceStatusResponse> EArchiveInvoiceStatus(string sessionId, string uuid);
         IDataResult<GetEArchiveReportResponse> GetEArchiveReport(string sessionId, string reportPeriod, string reportStatus = "Y");
