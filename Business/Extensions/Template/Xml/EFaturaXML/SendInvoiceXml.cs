@@ -357,45 +357,6 @@ namespace Business.Extensions.Template.Xml.EFaturaXML
                     Invoice.Add(InvoiceLine);
                 }
 
-                //XElement InvoiceLine = new XElement(cac + "InvoiceLine");
-                //InvoiceLine.Add(new XElement(cbc + "ID", model.Body?.SendInvoiceRequestBody?.Invoices[i]?.CONTENT?.InvoiceLine?.ID));
-                //InvoiceLine.Add(new XElement(cbc + "Note", model.Body?.SendInvoiceRequestBody?.Invoices[i]?.CONTENT?.InvoiceLine?.Notes));
-                //InvoiceLine.Add(new XElement(cbc + "InvoicedQuantity", new XAttribute("unitCode", unitCode.NamespaceName), model.Body?.SendInvoiceRequestBody?.Invoices[i]?.CONTENT?.InvoiceLine?.InvoicedQuantity));
-                //InvoiceLine.Add(new XElement(cbc + "LineExtensionAmount", new XAttribute("currencyID", currencyID.NamespaceName), model.Body?.SendInvoiceRequestBody?.Invoices[i]?.CONTENT?.InvoiceLine?.LineExtensionAmount));
-
-                //XElement TaxTotalInvoice = new XElement(cac + "TaxTotal");
-                //TaxTotalInvoice.Add(new XElement(cbc + "TaxAmount", new XAttribute("currencyID", currencyID.NamespaceName), model.Body?.SendInvoiceRequestBody?.Invoices[i]?.CONTENT?.InvoiceLine?.TaxTotal?.TaxAmount));
-
-                //XElement TaxSubtotalInvoice = new XElement(cac + "TaxSubtotal");
-                //TaxSubtotalInvoice.Add(new XElement(cbc + "TaxableAmount", new XAttribute("currencyID", currencyID.NamespaceName), model.Body?.SendInvoiceRequestBody?.Invoices[i]?.CONTENT?.InvoiceLine?.TaxTotal?.TaxSubtotal.TaxableAmount));
-                //TaxSubtotalInvoice.Add(new XElement(cbc + "TaxAmount", new XAttribute("currencyID", currencyID.NamespaceName), model.Body?.SendInvoiceRequestBody?.Invoices[i]?.CONTENT?.InvoiceLine?.TaxTotal?.TaxSubtotal.TaxAmount));
-                //TaxSubtotalInvoice.Add(new XElement(cbc + "CalculationSequenceNumeric", model.Body?.SendInvoiceRequestBody?.Invoices[i]?.CONTENT?.InvoiceLine?.TaxTotal?.TaxSubtotal.CalculationSequenceNumeric));
-                //TaxSubtotalInvoice.Add(new XElement(cbc + "Percent", model.Body?.SendInvoiceRequestBody?.Invoices[i]?.CONTENT?.InvoiceLine?.TaxTotal?.TaxSubtotal.Percent));
-
-                //XElement TaxCategoryInvoice = new XElement(cac + "TaxCategory");
-                //XElement TaxSchemeInvoice = new XElement(cac + "TaxScheme");
-                //TaxSchemeInvoice.Add(new XElement(cbc + "Name", model.Body?.SendInvoiceRequestBody?.Invoices[i]?.CONTENT?.InvoiceLine?.TaxTotal?.TaxSubtotal?.TaxCategory?.TaxScheme?.Name));
-                //TaxSchemeInvoice.Add(new XElement(cbc + "TaxTypeCode", model.Body?.SendInvoiceRequestBody?.Invoices[i]?.CONTENT?.InvoiceLine?.TaxTotal?.TaxSubtotal?.TaxCategory?.TaxScheme?.TaxTypeCode));
-                //TaxCategoryInvoice.Add(TaxTotalTaxScheme);
-
-                //TaxSubtotalInvoice.Add(TaxCategoryInvoice);
-
-                //TaxTotalInvoice.Add(TaxSubtotalInvoice);
-
-                //InvoiceLine.Add(TaxTotalInvoice);
-
-                //XElement Item = new XElement(cac + "Item");
-                //Item.Add(new XElement(cbc + "Name", model.Body?.SendInvoiceRequestBody?.Invoices[i]?.CONTENT?.InvoiceLine?.Item?.Name));
-
-                //InvoiceLine.Add(Item);
-
-                //XElement Price = new XElement(cac + "Price");
-                //Price.Add(new XElement(cbc + "PriceAmount", new XAttribute("currencyID", currencyID.NamespaceName), model.Body?.SendInvoiceRequestBody?.Invoices[i]?.CONTENT?.InvoiceLine?.Price?.PriceAmount));
-
-                //InvoiceLine.Add(Price);
-
-                //Invoice.Add(InvoiceLine);
-
                 string invoiceStr = Invoice.ToString();
                 byte[] invoiceBytes = Encoding.ASCII.GetBytes(invoiceStr);
                 var invoiceBase64 = Convert.ToBase64String(invoiceBytes);
