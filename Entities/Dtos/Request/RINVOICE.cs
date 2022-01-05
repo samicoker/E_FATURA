@@ -153,7 +153,7 @@ namespace Entities.Dtos.Request
     {
         public string CanonicalizationMethod { get; set; }
         public string SignatureMethod { get; set; }
-        public List<Reference> Reference { get; set; }
+        public List<Reference> References { get; set; }
     }
     public class Reference
     {

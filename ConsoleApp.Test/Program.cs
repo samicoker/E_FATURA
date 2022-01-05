@@ -49,7 +49,7 @@ namespace ConsoleApp.Test
                     UBLVersionID = "2.1", //
                     CustomizationID = "TR1.2",
                     ProfileID = "EARSIVFATURA",
-                    ID = "NEA2021002000013",
+                    ID = "NEA2021002000015",
                     CopyIndicator = "false",
                     UUID = guid, //"631b2f09-ca96-4bbb-81ea-0ccb1c2c2528",
                     IssueDate = "2021-09-03",
@@ -266,6 +266,43 @@ namespace ConsoleApp.Test
                         {
                             PriceAmount = "1"
                         }
+                    },
+                    InvoiceLines = new List<InvoiceLine>
+                    {
+                        new InvoiceLine
+                        {
+                            ID = "1",
+                            Notes = new List<string> { },
+                            InvoicedQuantity = "1",
+                            LineExtensionAmount = "1",
+                            TaxTotal = new TaxTotal
+                            {
+                                TaxAmount = "0.18",
+                                TaxSubtotal = new TaxSubtotal
+                                {
+                                    TaxableAmount = "1",
+                                    TaxAmount = "0.18",
+                                    CalculationSequenceNumeric = "1",
+                                    Percent = "18",
+                                    TaxCategory = new TaxCategory
+                                    {
+                                        TaxScheme = new TaxScheme
+                                        {
+                                            Name = "KDV",
+                                            TaxTypeCode = "0015"
+                                        }
+                                    }
+                                }
+                            },
+                            Item = new Item
+                            {
+                                Name = "Hizmet"
+                            },
+                            Price = new Price
+                            {
+                                PriceAmount = "1"
+                            }
+                        },
                     }
                 }
             };
@@ -495,8 +532,8 @@ namespace ConsoleApp.Test
             //var res = example.GetInvoiceStatus(sesres.Data.SessionId, invoice);
             //var res = example.GetInvoiceStatusAll(sesres.Data.SessionId, "8cd7ab00-55fa-42b0-a1bd-9f3b4c91896b");
 
-            //var res = example.WriteToArchieveExtended(sesres.Data.SessionId, ArchiveINVOICE);
-            var res = example.ReadFromArchive(sesres.Data.SessionId, invoice.UUID);
+            var res = example.WriteToArchieveExtended(sesres.Data.SessionId, ArchiveINVOICE);
+            //var res = example.ReadFromArchive(sesres.Data.SessionId, invoice.UUID);
             //var res = example.CancelEArchiveInvoice(sesres.Data.SessionId, invoice.UUID);
             //var res = example.EArchiveInvoiceStatus(sesres.Data.SessionId, invoice.UUID);
             //var res = example.GetEArchiveReport(sesres.Data.SessionId, "202110"); // 202110

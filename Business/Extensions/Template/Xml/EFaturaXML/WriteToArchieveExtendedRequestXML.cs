@@ -104,8 +104,7 @@ namespace Business.Extensions.Template.Xml.EFaturaXML
             Invoice.Add(new XElement(cbc + "DocumentCurrencyCode", model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.DocumentCurrencyCode));
             Invoice.Add(new XElement(cbc + "LineCountNumeric", model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.LineCountNumeric));
 
-            int additionalCount =
-                model.Body.ArchiveInvoiceExtendedContent.INVOICE_PROPERTIES.INVOICE_CONTENT.INVOICE.CONTENT.AdditionalDocumentReferences.Count;
+            int additionalCount = model.Body.ArchiveInvoiceExtendedContent.INVOICE_PROPERTIES.INVOICE_CONTENT.INVOICE.CONTENT.AdditionalDocumentReferences.Count;
             List<AdditionalDocumentReference> additionals = model.Body.ArchiveInvoiceExtendedContent.INVOICE_PROPERTIES.INVOICE_CONTENT.INVOICE.CONTENT.AdditionalDocumentReferences;
             //XElement AdditionalDocumentReference = new XElement(cac + "AdditionalDocumentReference");
             for (int i = 0; i < additionalCount; i++)
@@ -335,44 +334,99 @@ namespace Business.Extensions.Template.Xml.EFaturaXML
 
             Invoice.Add(LegalMonetaryTotal);
 
-            XElement InvoiceLine = new XElement(cac + "InvoiceLine");
-            InvoiceLine.Add(new XElement(cbc + "ID", model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.ID));
-            InvoiceLine.Add(new XElement(cbc + "Note", model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.Notes));
-            InvoiceLine.Add(new XElement(cbc + "InvoicedQuantity", new XAttribute("unitCode", unitCode.NamespaceName), model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.InvoicedQuantity));
-            InvoiceLine.Add(new XElement(cbc + "LineExtensionAmount", new XAttribute("currencyID", currencyID.NamespaceName), model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.LineExtensionAmount));
+            //XElement InvoiceLine = new XElement(cac + "InvoiceLine");
+            //InvoiceLine.Add(new XElement(cbc + "ID", model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.ID));
+            //InvoiceLine.Add(new XElement(cbc + "Note", model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.Notes));
+            //InvoiceLine.Add(new XElement(cbc + "InvoicedQuantity", new XAttribute("unitCode", unitCode.NamespaceName), model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.InvoicedQuantity));
+            //InvoiceLine.Add(new XElement(cbc + "LineExtensionAmount", new XAttribute("currencyID", currencyID.NamespaceName), model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.LineExtensionAmount));
 
-            XElement TaxTotalInvoice = new XElement(cac + "TaxTotal");
-            TaxTotalInvoice.Add(new XElement(cbc + "TaxAmount", new XAttribute("currencyID", currencyID.NamespaceName), model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.TaxTotal?.TaxAmount));
+            //XElement TaxTotalInvoice = new XElement(cac + "TaxTotal");
+            //TaxTotalInvoice.Add(new XElement(cbc + "TaxAmount", new XAttribute("currencyID", currencyID.NamespaceName), model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.TaxTotal?.TaxAmount));
 
-            XElement TaxSubtotalInvoice = new XElement(cac + "TaxSubtotal");
-            TaxSubtotalInvoice.Add(new XElement(cbc + "TaxableAmount", new XAttribute("currencyID", currencyID.NamespaceName), model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.TaxTotal?.TaxSubtotal.TaxableAmount));
-            TaxSubtotalInvoice.Add(new XElement(cbc + "TaxAmount", new XAttribute("currencyID", currencyID.NamespaceName), model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.TaxTotal?.TaxSubtotal.TaxAmount));
-            TaxSubtotalInvoice.Add(new XElement(cbc + "CalculationSequenceNumeric", model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.TaxTotal?.TaxSubtotal.CalculationSequenceNumeric));
-            TaxSubtotalInvoice.Add(new XElement(cbc + "Percent", model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.TaxTotal?.TaxSubtotal.Percent));
+            //XElement TaxSubtotalInvoice = new XElement(cac + "TaxSubtotal");
+            //TaxSubtotalInvoice.Add(new XElement(cbc + "TaxableAmount", new XAttribute("currencyID", currencyID.NamespaceName), model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.TaxTotal?.TaxSubtotal.TaxableAmount));
+            //TaxSubtotalInvoice.Add(new XElement(cbc + "TaxAmount", new XAttribute("currencyID", currencyID.NamespaceName), model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.TaxTotal?.TaxSubtotal.TaxAmount));
+            //TaxSubtotalInvoice.Add(new XElement(cbc + "CalculationSequenceNumeric", model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.TaxTotal?.TaxSubtotal.CalculationSequenceNumeric));
+            //TaxSubtotalInvoice.Add(new XElement(cbc + "Percent", model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.TaxTotal?.TaxSubtotal.Percent));
 
-            XElement TaxCategoryInvoice = new XElement(cac + "TaxCategory");
-            XElement TaxSchemeInvoice = new XElement(cac + "TaxScheme");
-            TaxSchemeInvoice.Add(new XElement(cbc + "Name", model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.TaxTotal?.TaxSubtotal?.TaxCategory?.TaxScheme?.Name));
-            TaxSchemeInvoice.Add(new XElement(cbc + "TaxTypeCode", model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.TaxTotal?.TaxSubtotal?.TaxCategory?.TaxScheme?.TaxTypeCode));
-            TaxCategoryInvoice.Add(TaxTotalTaxScheme);
+            //XElement TaxCategoryInvoice = new XElement(cac + "TaxCategory");
+            //XElement TaxSchemeInvoice = new XElement(cac + "TaxScheme");
+            //TaxSchemeInvoice.Add(new XElement(cbc + "Name", model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.TaxTotal?.TaxSubtotal?.TaxCategory?.TaxScheme?.Name));
+            //TaxSchemeInvoice.Add(new XElement(cbc + "TaxTypeCode", model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.TaxTotal?.TaxSubtotal?.TaxCategory?.TaxScheme?.TaxTypeCode));
+            //TaxCategoryInvoice.Add(TaxTotalTaxScheme);
 
-            TaxSubtotalInvoice.Add(TaxCategoryInvoice);
+            //TaxSubtotalInvoice.Add(TaxCategoryInvoice);
 
-            TaxTotalInvoice.Add(TaxSubtotalInvoice);
+            //TaxTotalInvoice.Add(TaxSubtotalInvoice);
 
-            InvoiceLine.Add(TaxTotalInvoice);
+            //InvoiceLine.Add(TaxTotalInvoice);
 
-            XElement Item = new XElement(cac + "Item");
-            Item.Add(new XElement(cbc + "Name", model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.Item?.Name));
+            //XElement Item = new XElement(cac + "Item");
+            //Item.Add(new XElement(cbc + "Name", model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.Item?.Name));
 
-            InvoiceLine.Add(Item);
+            //InvoiceLine.Add(Item);
 
-            XElement Price = new XElement(cac + "Price");
-            Price.Add(new XElement(cbc + "PriceAmount", new XAttribute("currencyID", currencyID.NamespaceName), model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.Price?.PriceAmount));
+            //XElement Price = new XElement(cac + "Price");
+            //Price.Add(new XElement(cbc + "PriceAmount", new XAttribute("currencyID", currencyID.NamespaceName), model.Body?.ArchiveInvoiceExtendedContent?.INVOICE_PROPERTIES?.INVOICE_CONTENT?.INVOICE?.CONTENT?.InvoiceLine?.Price?.PriceAmount));
 
-            InvoiceLine.Add(Price);
+            //InvoiceLine.Add(Price);
 
-            Invoice.Add(InvoiceLine);
+            //Invoice.Add(InvoiceLine);
+
+            int invoCount;
+
+            if (model.Body.ArchiveInvoiceExtendedContent.INVOICE_PROPERTIES.INVOICE_CONTENT.INVOICE.CONTENT.InvoiceLines != null)
+            {
+                invoCount = model.Body.ArchiveInvoiceExtendedContent.INVOICE_PROPERTIES.INVOICE_CONTENT.INVOICE.CONTENT.InvoiceLines.Count;
+            }
+            else
+            {
+                invoCount = 0;
+            }
+
+            for (int j = 0; j < invoCount; j++)
+            {
+                XElement InvoiceLine = new XElement(cac + "InvoiceLine");
+
+                InvoiceLine.Add(new XElement(cbc + "ID", model.Body?.ArchiveInvoiceExtendedContent.INVOICE_PROPERTIES.INVOICE_CONTENT.INVOICE.CONTENT?.InvoiceLines[j]?.ID));
+                InvoiceLine.Add(new XElement(cbc + "Note", model.Body?.ArchiveInvoiceExtendedContent.INVOICE_PROPERTIES.INVOICE_CONTENT.INVOICE.CONTENT?.InvoiceLines[j]?.Notes));
+                InvoiceLine.Add(new XElement(cbc + "InvoicedQuantity", new XAttribute("unitCode", unitCode.NamespaceName), model.Body?.ArchiveInvoiceExtendedContent.INVOICE_PROPERTIES.INVOICE_CONTENT.INVOICE.CONTENT?.InvoiceLines[j]?.InvoicedQuantity));
+                InvoiceLine.Add(new XElement(cbc + "LineExtensionAmount", new XAttribute("currencyID", currencyID.NamespaceName), model.Body?.ArchiveInvoiceExtendedContent.INVOICE_PROPERTIES.INVOICE_CONTENT.INVOICE.CONTENT?.InvoiceLines[j]?.LineExtensionAmount));
+
+                XElement TaxTotalInvoice = new XElement(cac + "TaxTotal");
+                TaxTotalInvoice.Add(new XElement(cbc + "TaxAmount", new XAttribute("currencyID", currencyID.NamespaceName), model.Body?.ArchiveInvoiceExtendedContent.INVOICE_PROPERTIES.INVOICE_CONTENT.INVOICE.CONTENT?.InvoiceLines[j]?.TaxTotal?.TaxAmount));
+
+                XElement TaxSubtotalInvoice = new XElement(cac + "TaxSubtotal");
+                TaxSubtotalInvoice.Add(new XElement(cbc + "TaxableAmount", new XAttribute("currencyID", currencyID.NamespaceName), model.Body?.ArchiveInvoiceExtendedContent.INVOICE_PROPERTIES.INVOICE_CONTENT.INVOICE.CONTENT?.InvoiceLines[j]?.TaxTotal?.TaxSubtotal.TaxableAmount));
+                TaxSubtotalInvoice.Add(new XElement(cbc + "TaxAmount", new XAttribute("currencyID", currencyID.NamespaceName), model.Body?.ArchiveInvoiceExtendedContent.INVOICE_PROPERTIES.INVOICE_CONTENT.INVOICE.CONTENT?.InvoiceLines[j]?.TaxTotal?.TaxSubtotal.TaxAmount));
+                TaxSubtotalInvoice.Add(new XElement(cbc + "CalculationSequenceNumeric", model.Body?.ArchiveInvoiceExtendedContent.INVOICE_PROPERTIES.INVOICE_CONTENT.INVOICE.CONTENT?.InvoiceLines[j]?.TaxTotal?.TaxSubtotal.CalculationSequenceNumeric));
+                TaxSubtotalInvoice.Add(new XElement(cbc + "Percent", model.Body?.ArchiveInvoiceExtendedContent.INVOICE_PROPERTIES.INVOICE_CONTENT.INVOICE.CONTENT?.InvoiceLines[j]?.TaxTotal?.TaxSubtotal.Percent));
+
+                XElement TaxCategoryInvoice = new XElement(cac + "TaxCategory");
+                XElement TaxSchemeInvoice = new XElement(cac + "TaxScheme");
+                TaxSchemeInvoice.Add(new XElement(cbc + "Name", model.Body?.ArchiveInvoiceExtendedContent.INVOICE_PROPERTIES.INVOICE_CONTENT.INVOICE.CONTENT?.InvoiceLines[j]?.TaxTotal?.TaxSubtotal?.TaxCategory?.TaxScheme?.Name));
+                TaxSchemeInvoice.Add(new XElement(cbc + "TaxTypeCode", model.Body?.ArchiveInvoiceExtendedContent.INVOICE_PROPERTIES.INVOICE_CONTENT.INVOICE.CONTENT?.InvoiceLines[j]?.TaxTotal?.TaxSubtotal?.TaxCategory?.TaxScheme?.TaxTypeCode));
+                TaxCategoryInvoice.Add(TaxTotalTaxScheme);
+
+                TaxSubtotalInvoice.Add(TaxCategoryInvoice);
+
+                TaxTotalInvoice.Add(TaxSubtotalInvoice);
+
+                InvoiceLine.Add(TaxTotalInvoice);
+
+                XElement Item = new XElement(cac + "Item");
+                Item.Add(new XElement(cbc + "Name", model.Body?.ArchiveInvoiceExtendedContent.INVOICE_PROPERTIES.INVOICE_CONTENT.INVOICE.CONTENT?.InvoiceLines[j]?.Item?.Name));
+
+                InvoiceLine.Add(Item);
+
+                XElement Price = new XElement(cac + "Price");
+                Price.Add(new XElement(cbc + "PriceAmount", new XAttribute("currencyID", currencyID.NamespaceName), model.Body?.ArchiveInvoiceExtendedContent.INVOICE_PROPERTIES.INVOICE_CONTENT.INVOICE.CONTENT?.InvoiceLines[j]?.Price?.PriceAmount));
+
+                InvoiceLine.Add(Price);
+
+
+                Invoice.Add(InvoiceLine);
+            }
 
             //INVOICE
             string invoiceStr = Invoice.ToString();

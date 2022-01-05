@@ -21,11 +21,11 @@ namespace Business.Concrete
 {
     public class InvoiceManager : IInvoiceService
     {
-        IInvoiceDal _iInvoiceDal;
+        IInvoiceDal _invoiceDal;
 
         public InvoiceManager(IInvoiceDal invoiceDal)
         {
-            _iInvoiceDal = invoiceDal;
+            _invoiceDal = invoiceDal;
         }
 
         #region AUTHENTICATION
@@ -34,7 +34,7 @@ namespace Business.Concrete
         {
             try
             {
-                var res = _iInvoiceDal.GetLogin(userName, password);
+                var res = _invoiceDal.GetLogin(userName, password);
 
                 if (!res.Success)
                 {
@@ -99,7 +99,7 @@ namespace Business.Concrete
         {
             try
             {
-                var res = _iInvoiceDal.GetLogOut(sessionId);
+                var res = _invoiceDal.GetLogOut(sessionId);
 
                 if (!res.Success)
                 {
@@ -169,7 +169,7 @@ namespace Business.Concrete
         {
             try
             {
-                var res = _iInvoiceDal.GetGibUserListRequest(sessionId);
+                var res = _invoiceDal.GetGibUserListRequest(sessionId);
 
                 if (!res.Success)
                 {
@@ -245,7 +245,7 @@ namespace Business.Concrete
         {
             try
             {
-                var res = _iInvoiceDal.SendInvoice(sessionId, rINVOICEs);
+                var res = _invoiceDal.SendInvoice(sessionId, rINVOICEs);
 
                 if (!res.Success)
                 {
@@ -315,7 +315,7 @@ namespace Business.Concrete
         {
             try
             {
-                var res = _iInvoiceDal.GetInvoice(sessionId, limit);
+                var res = _invoiceDal.GetInvoice(sessionId, limit);
 
                 if (!res.Success)
                 {
@@ -865,7 +865,7 @@ namespace Business.Concrete
         {
             try
             {
-                var res = _iInvoiceDal.GetMarkInvoice(sessionId, invoices);
+                var res = _invoiceDal.GetMarkInvoice(sessionId, invoices);
 
                 if (!res.Success)
                 {
@@ -941,7 +941,7 @@ namespace Business.Concrete
         {
             try
             {
-                var res = _iInvoiceDal.GetSendInvoiceResponseWithServerSign(sessionId, invoice, status);
+                var res = _invoiceDal.GetSendInvoiceResponseWithServerSign(sessionId, invoice, status);
 
                 if (!res.Success)
                 {
@@ -1011,7 +1011,7 @@ namespace Business.Concrete
         {
             try
             {
-                var res = _iInvoiceDal.GetInvoiceStatus(sessionId, invoice);
+                var res = _invoiceDal.GetInvoiceStatus(sessionId, invoice);
 
                 if (!res.Success)
                 {
@@ -1085,7 +1085,7 @@ namespace Business.Concrete
         {
             try
             {
-                var res = _iInvoiceDal.GetInvoiceStatusAllRequest(sessionId, UUID);
+                var res = _invoiceDal.GetInvoiceStatusAllRequest(sessionId, UUID);
 
                 if (!res.Success)
                 {
@@ -1154,7 +1154,7 @@ namespace Business.Concrete
         {
             try
             {
-                var res = _iInvoiceDal.GetWriteToArchieveExtendedRequest(sessionId,rINVOICE);
+                var res = _invoiceDal.GetWriteToArchieveExtendedRequest(sessionId,rINVOICE);
 
                 if (!res.Success)
                 {
@@ -1237,7 +1237,7 @@ namespace Business.Concrete
         {
             try
             {
-                var res = _iInvoiceDal.GetReadFromArchive(sessionId, invoiceId);
+                var res = _invoiceDal.GetReadFromArchive(sessionId, invoiceId);
 
                 if (!res.Success)
                 {
@@ -1756,7 +1756,7 @@ namespace Business.Concrete
         {
             try
             {
-                var res = _iInvoiceDal.GetCancelEArchiveInvoice(sessionId, uuid);
+                var res = _invoiceDal.GetCancelEArchiveInvoice(sessionId, uuid);
 
                 if (!res.Success)
                 {
@@ -1833,7 +1833,7 @@ namespace Business.Concrete
         {
             try
             {
-                var res = _iInvoiceDal.GetEArchiveInvoiceStatus(sessionId, uuid);
+                var res = _invoiceDal.GetEArchiveInvoiceStatus(sessionId, uuid);
 
                 if (!res.Success)
                 {
@@ -1902,7 +1902,7 @@ namespace Business.Concrete
         {
             try
             {
-                var res = _iInvoiceDal.GetEArchiveReportRequest(sessionId, reportPeriod, reportStatus);
+                var res = _invoiceDal.GetEArchiveReportRequest(sessionId, reportPeriod, reportStatus);
 
                 if (res == null)
                 {
@@ -1984,7 +1984,7 @@ namespace Business.Concrete
         {
             try
             {
-                var res = _iInvoiceDal.GetReadEArchiveReportRequest(sessionId, raporNo);
+                var res = _invoiceDal.GetReadEArchiveReportRequest(sessionId, raporNo);
 
                 if (res == null)
                 {
@@ -2105,7 +2105,7 @@ namespace Business.Concrete
         {
             try
             {
-                var res = _iInvoiceDal.GetEmailEarchiveInvoiceRequest(sessionId, uuId, eMail);
+                var res = _invoiceDal.GetEmailEarchiveInvoiceRequest(sessionId, uuId, eMail);
                 if (res == null)
                 {
                     throw new Exception(Messages.NotFoundDataByTableRowID());
