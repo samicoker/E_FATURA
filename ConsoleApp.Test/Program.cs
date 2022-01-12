@@ -108,7 +108,7 @@ namespace ConsoleApp.Test
                                 {
                                     Name = "TR"
                                 }
-                            }
+                            },
                         },
                         DigitalSignatureAttachment = new DigitalSignatureAttachment
                         {
@@ -526,13 +526,13 @@ namespace ConsoleApp.Test
 
 
             //var res = example.SendInvoice(sesres.Data.SessionId, Invoices);
-            //var res = example.GetInvoice(sesres.Data.SessionId, 10);
+            var res = example.GetInvoice(sesres.Data.SessionId, 10);
             //var res = example.MarkInvoice(sesres.Data.SessionId, invoices);
             //var res = example.SendInvoiceResponseWithServerSign(sesres.Data.SessionId, invoice, false);
             //var res = example.GetInvoiceStatus(sesres.Data.SessionId, invoice);
             //var res = example.GetInvoiceStatusAll(sesres.Data.SessionId, "8cd7ab00-55fa-42b0-a1bd-9f3b4c91896b");
 
-            var res = example.WriteToArchieveExtended(sesres.Data.SessionId, ArchiveINVOICE);
+           // var res = example.WriteToArchieveExtended(sesres.Data.SessionId, ArchiveINVOICE);
             //var res = example.ReadFromArchive(sesres.Data.SessionId, invoice.UUID);
             //var res = example.CancelEArchiveInvoice(sesres.Data.SessionId, invoice.UUID);
             //var res = example.EArchiveInvoiceStatus(sesres.Data.SessionId, invoice.UUID);

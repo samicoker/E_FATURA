@@ -191,6 +191,8 @@ namespace Entities.Dtos.Request
         public string WebSiteURI { get; set; }
         public PartyIdentification PartyIdentification { get; set; }
         public PostalAddress PostalAddress { get; set; }
+        public PartyTaxScheme PartyTaxScheme { get; set; }
+        public PartyName PartyName { get; set; }
     }
     public class PostalAddress
     {
