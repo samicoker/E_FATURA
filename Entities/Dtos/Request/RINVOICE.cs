@@ -42,7 +42,6 @@ namespace Entities.Dtos.Request
         public PricingExchangeRate PricingExchangeRate { get; set; }
         public TaxTotal TaxTotal { get; set; }
         public LegalMonetaryTotal LegalMonetaryTotal { get; set; }
-        public InvoiceLine InvoiceLine { get; set; }
         public List<InvoiceLine> InvoiceLines { get; set; }
     }
     public class PricingExchangeRate
@@ -306,6 +305,7 @@ namespace Entities.Dtos.Request
         public TaxTotal TaxTotal { get; set; }
         public Item Item { get; set; }
         public Price Price { get; set; }
+        public List<AllowanceCharge> AllowanceCharges { get; set; }
     }
     public class Item
     {

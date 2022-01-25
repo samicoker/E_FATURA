@@ -768,6 +768,9 @@ namespace Business.Concrete
                                 var priceStr = invoiceLines?.ChildNodes[0]?.GetRegexClass("cac:Price");
                                 var price = XmlStringToXmlNode2(priceStr);
 
+                                var allowanceCharceInvlStr = invoiceLines?.ChildNodes[0]?.GetRegexClasses("cac:AllowanceCharge");
+                                //var allowanceCharceInvl = XmlStringToXmlNode2(allowanceCharceInvlStr);
+
                                 InvoiceLine invoiceLine = new InvoiceLine
                                 {
                                     ID = invoiceLines?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:ID"),
@@ -816,7 +819,8 @@ namespace Business.Concrete
                                     Price = new Price
                                     {
                                         PriceAmount = price?.ChildNodes[0]?.ChildNodes?.GetValue("cbc:PriceAmount"),
-                                    }
+                                    },
+                                    AllowanceCharges = new List<AllowanceCharge>()
                                 };
                                 if (notes != null)
                                 {
@@ -842,6 +846,26 @@ namespace Business.Concrete
                                         invoiceLine.Item.CommodityClassifications.Add(model);
                                     }
                                 }
+
+                                if (allowanceCharceInvlStr != null)
+                                {
+                                    for (int k = 0; k < allowanceCharceInvlStr.Count; k++)
+                                    {
+                                        var allowanceCharceInvl = XmlStringToXmlNode2(allowanceCharceInvlStr[k]);
+
+                                        var AllowanceCharge = new AllowanceCharge
+                                        {
+                                            AllowanceChargeReason = allowanceCharceInvl.ChildNodes[0].ChildNodes.GetValue("cbc:ChargeIndicator"),
+                                            ChargeIndicator = allowanceCharceInvl.ChildNodes[0].ChildNodes.GetValue("cbc:ChargeIndicator"),
+                                            Amount = allowanceCharceInvl.ChildNodes[0].ChildNodes.GetValue("cbc:Amount"),
+                                            BaseAmount = allowanceCharceInvl.ChildNodes[0].ChildNodes.GetValue("cbc:BaseAmount"),
+                                            MultiplierFactorNumeric = allowanceCharceInvl.ChildNodes[0].ChildNodes.GetValue("cbc:MultiplierFactorNumeric"),
+                                            SequenceNumeric = allowanceCharceInvl.ChildNodes[0].ChildNodes.GetValue("cbc:SequenceNumeric")
+                                        };
+                                        invoiceLine.AllowanceCharges.Add(AllowanceCharge);
+                                    }
+                                }
+
 
                                 invoice.CONTENT.InvoiceLines.Add(invoiceLine);
                             }

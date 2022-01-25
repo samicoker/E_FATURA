@@ -49,7 +49,7 @@ namespace ConsoleApp.Test
                     UBLVersionID = "2.1", //
                     CustomizationID = "TR1.2",
                     ProfileID = "EARSIVFATURA",
-                    ID = "NEA2021002000015",
+                    ID = "NEA2021002000016",
                     CopyIndicator = "false",
                     UUID = guid, //"631b2f09-ca96-4bbb-81ea-0ccb1c2c2528",
                     IssueDate = "2021-09-03",
@@ -232,40 +232,6 @@ namespace ConsoleApp.Test
                         TaxInclusiveAmount = "1.18",
                         AllowanceTotalAmount = "0",
                         PayableAmount = "1.18"
-                    },
-                    InvoiceLine = new InvoiceLine
-                    {
-                        ID = "1",
-                        Notes = new List<string> { },
-                        InvoicedQuantity = "1",
-                        LineExtensionAmount = "1",
-                        TaxTotal = new TaxTotal
-                        {
-                            TaxAmount = "0.18",
-                            TaxSubtotal = new TaxSubtotal
-                            {
-                                TaxableAmount = "1",
-                                TaxAmount = "0.18",
-                                CalculationSequenceNumeric = "1",
-                                Percent = "18",
-                                TaxCategory = new TaxCategory
-                                {
-                                    TaxScheme = new TaxScheme
-                                    {
-                                        Name = "KDV",
-                                        TaxTypeCode = "0015"
-                                    }
-                                }
-                            }
-                        },
-                        Item = new Item
-                        {
-                            Name = "Hizmet"
-                        },
-                        Price = new Price
-                        {
-                            PriceAmount = "1"
-                        }
                     },
                     InvoiceLines = new List<InvoiceLine>
                     {
@@ -526,13 +492,13 @@ namespace ConsoleApp.Test
 
 
             //var res = example.SendInvoice(sesres.Data.SessionId, Invoices);
-            var res = example.GetInvoice(sesres.Data.SessionId, 10);
+            var res = example.GetInvoice(sesres.Data.SessionId, 50);
             //var res = example.MarkInvoice(sesres.Data.SessionId, invoices);
             //var res = example.SendInvoiceResponseWithServerSign(sesres.Data.SessionId, invoice, false);
             //var res = example.GetInvoiceStatus(sesres.Data.SessionId, invoice);
             //var res = example.GetInvoiceStatusAll(sesres.Data.SessionId, "8cd7ab00-55fa-42b0-a1bd-9f3b4c91896b");
 
-           // var res = example.WriteToArchieveExtended(sesres.Data.SessionId, ArchiveINVOICE);
+            //var res = example.WriteToArchieveExtended(sesres.Data.SessionId, ArchiveINVOICE);
             //var res = example.ReadFromArchive(sesres.Data.SessionId, invoice.UUID);
             //var res = example.CancelEArchiveInvoice(sesres.Data.SessionId, invoice.UUID);
             //var res = example.EArchiveInvoiceStatus(sesres.Data.SessionId, invoice.UUID);
