@@ -491,8 +491,8 @@ namespace ConsoleApp.Test
             //var res = example.GetGibUserList(sesres.Data.SessionId);
 
 
-            //var res = example.SendInvoice(sesres.Data.SessionId, Invoices);
-            var res = example.GetInvoice(sesres.Data.SessionId, 50);
+            var res = example.SendInvoice(sesres.Data.SessionId, Invoices);
+            //var res = example.GetInvoice(sesres.Data.SessionId, 50);
             //var res = example.MarkInvoice(sesres.Data.SessionId, invoices);
             //var res = example.SendInvoiceResponseWithServerSign(sesres.Data.SessionId, invoice, false);
             //var res = example.GetInvoiceStatus(sesres.Data.SessionId, invoice);

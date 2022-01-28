@@ -272,6 +272,7 @@ namespace Entities.Dtos.Request
         public string TaxableAmount { get; set; }
         public string TaxAmount { get; set; }
         public string CalculationSequenceNumeric { get; set; }
+        public string TransactionCurrencyTaxAmount { get; set; }
         public string Percent { get; set; }
         public TaxCategory TaxCategory { get; set; }
     }
